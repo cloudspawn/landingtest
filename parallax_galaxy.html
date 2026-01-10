@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Galaxy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            color: white;
+            background: #000;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        nav.scrolled {
+            background: rgba(5, 5, 15, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px;
+            transition: 0.3s;
+        }
+
+        /* Fond galaxie fixe en parallax */
+        .galaxy-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .layer-bg {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            z-index: 1;
+        }
+
+        .layer-stars-far {
+            z-index: 2;
+        }
+
+        .layer-stars-mid {
+            z-index: 3;
+        }
+
+        .layer-stars-near {
+            z-index: 4;
+        }
+
+        .layer-nebula {
+            z-index: 5;
+            background: radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.15), transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(0, 100, 255, 0.1), transparent 40%);
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4a90e2, #1a4d7a);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+        }
+
+        /* Section Hero */
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards 0.5s;
+        }
+
+        .hero-content h1 {
+            font-size: 80px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 24px;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Sections de contenu */
+        .content-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 50px;
+            scroll-snap-align: start;
+        }
+
+        /* Scroll snap pour centrer les sections */
+        .scroll-container {
+            position: relative;
+            z-index: 1;
+            scroll-snap-type: y mandatory;
+        }
+
+        /* SVG Creature cosmique en parallax */
+        .cosmic-creature-container {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
+            overflow: visible;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .cosmic-creature-container.visible {
+            opacity: 1;
+        }
+
+        .cosmic-creature {
+            position: absolute;
+            width: 100%;
+            height: 400vh;
+            top: 0;
+            left: 0;
+        }
+
+        /* Animation douce des éléments */
+        @keyframes gentle-float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .helix-strand {
+            animation: gentle-float 6s ease-in-out infinite;
+        }
+
+        .helix-strand:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .cosmic-creature {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Contenu des sections */
+        .section-content {
+            position: relative;
+            z-index: 5;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            padding: 60px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.05);
+        }
+
+        .section-content h2 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 70%;
+                background: rgba(5, 5, 15, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.3s;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .burger {
+                display: flex;
+            }
+
+            .hero-content h1 {
+                font-size: 40px;
+            }
+
+            .content-section {
+                padding: 0 20px;
+            }
+
+            .section-content {
+                padding: 40px 30px;
+            }
+
+            .section-content h2 {
+                font-size: 32px;
+            }
+
+            .cosmic-creature-container {
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">COSMIC</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#section1">Présentation</a></li>
+            <li><a href="#section2">Objectifs</a></li>
+            <li><a href="#section3">Vision</a></li>
+            <li><a href="#section4">Contact</a></li>
+        </ul>
+        <div class="burger" id="burger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Fond galaxie fixe avec parallax -->
+    <div class="galaxy-background">
+        <div class="layer layer-bg"></div>
+        <div class="layer layer-stars-far" id="starsFar"></div>
+        <div class="layer layer-stars-mid" id="starsMid"></div>
+        <div class="layer layer-stars-near" id="starsNear"></div>
+        <div class="layer layer-nebula" id="nebula"></div>
+    </div>
+
+    <!-- Section Hero -->
+    <section class="hero-section" id="home">
+        <div class="hero-content">
+            <h1>Voyagez dans l'Espace</h1>
+            <p>Une expérience parallax immersive</p>
+        </div>
+    </section>
+
+    <!-- Container de scroll avec créature cosmique -->
+    <div class="scroll-container">
+        <!-- Créature cosmique SVG qui se déplace avec le scroll -->
+        <div class="cosmic-creature-container" id="creatureContainer">
+            <svg class="cosmic-creature" id="cosmicCreature" viewBox="0 0 400 2400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="dnaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.9" />
+                        <stop offset="25%" style="stop-color:#7b2ff7;stop-opacity:0.95" />
+                        <stop offset="50%" style="stop-color:#00d4ff;stop-opacity:1" />
+                        <stop offset="75%" style="stop-color:#7b2ff7;stop-opacity:0.95" />
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0.9" />
+                    </linearGradient>
+                    
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+
+                    <filter id="strong-glow">
+                        <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Hélice ADN Brin 1 (gauche) -->
+                <path class="helix-strand" 
+                      d="M 150 0 Q 120 100 150 200 T 150 400 Q 120 500 150 600 T 150 800 Q 120 900 150 1000 T 150 1200 Q 120 1300 150 1400 T 150 1600 Q 120 1700 150 1800 T 150 2000 Q 120 2100 150 2200 T 150 2400" 
+                      stroke="url(#dnaGradient)" 
+                      stroke-width="8" 
+                      fill="none" 
+                      filter="url(#glow)" 
+                      opacity="0.9"/>
+
+                <!-- Hélice ADN Brin 2 (droite) -->
+                <path class="helix-strand" 
+                      d="M 250 0 Q 280 100 250 200 T 250 400 Q 280 500 250 600 T 250 800 Q 280 900 250 1000 T 250 1200 Q 280 1300 250 1400 T 250 1600 Q 280 1700 250 1800 T 250 2000 Q 280 2100 250 2200 T 250 2400" 
+                      stroke="url(#dnaGradient)" 
+                      stroke-width="8" 
+                      fill="none" 
+                      filter="url(#glow)" 
+                      opacity="0.9"/>
+
+                <!-- Barreaux connecteurs -->
+                <line x1="150" y1="100" x2="250" y2="100" stroke="#00d4ff" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="300" x2="250" y2="300" stroke="#7b2ff7" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="500" x2="250" y2="500" stroke="#00d4ff" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="700" x2="250" y2="700" stroke="#7b2ff7" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="900" x2="250" y2="900" stroke="#00d4ff" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="1100" x2="250" y2="1100" stroke="#7b2ff7" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="1300" x2="250" y2="1300" stroke="#00d4ff" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="1500" x2="250" y2="1500" stroke="#7b2ff7" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="1700" x2="250" y2="1700" stroke="#00d4ff" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="1900" x2="250" y2="1900" stroke="#7b2ff7" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="2100" x2="250" y2="2100" stroke="#00d4ff" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+                <line x1="150" y1="2300" x2="250" y2="2300" stroke="#7b2ff7" stroke-width="3" opacity="0.7" filter="url(#glow)"/>
+
+                <!-- Nœuds lumineux sur les brins -->
+                <circle cx="150" cy="200" r="6" fill="#00d4ff" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="200" r="6" fill="#00d4ff" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                </circle>
+
+                <circle cx="150" cy="600" r="6" fill="#7b2ff7" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="600" r="6" fill="#7b2ff7" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+
+                <circle cx="150" cy="1000" r="6" fill="#00d4ff" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="1000" r="6" fill="#00d4ff" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+                </circle>
+
+                <circle cx="150" cy="1400" r="6" fill="#7b2ff7" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="1400" r="6" fill="#7b2ff7" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/>
+                </circle>
+
+                <circle cx="150" cy="1800" r="6" fill="#00d4ff" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="250" cy="1800" r="6" fill="#00d4ff" filter="url(#strong-glow)" opacity="0.9">
+                    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.8s" repeatCount="indefinite"/>
+                </circle>
+
+                <!-- Particules flottantes autour de l'ADN -->
+                <circle cx="100" cy="400" r="3" fill="#00d4ff" opacity="0.6">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/>
+                    <animate attributeName="cy" values="400;380;400" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="300" cy="800" r="3" fill="#7b2ff7" opacity="0.6">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3.5s" repeatCount="indefinite"/>
+                    <animate attributeName="cy" values="800;780;800" dur="4.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="120" cy="1200" r="3" fill="#00d4ff" opacity="0.6">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.8s" repeatCount="indefinite"/>
+                    <animate attributeName="cy" values="1200;1180;1200" dur="4.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="280" cy="1600" r="3" fill="#7b2ff7" opacity="0.6">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3.2s" repeatCount="indefinite"/>
+                    <animate attributeName="cy" values="1600;1580;1600" dur="3.8s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Sections de contenu -->
+        <section class="content-section" id="section1">
+            <div class="section-content">
+                <h2>Présentation</h2>
+                <p>Bienvenue dans un univers où la technologie rencontre l'art cosmique. Notre plateforme explore les frontières de l'expérience utilisateur à travers des interfaces immersives et innovantes.</p>
+                <p>Chaque pixel, chaque animation, chaque transition est pensée pour vous transporter au-delà des limites du web traditionnel.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="section2">
+            <div class="section-content">
+                <h2>Objectifs</h2>
+                <p>Nous visons à créer des expériences web qui captivent, inspirent et transcendent les attentes. Notre mission est de repousser les limites du possible en combinant design avant-gardiste et technologie de pointe.</p>
+                <p>Innovation, créativité et excellence sont les piliers de notre approche.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="section3">
+            <div class="section-content">
+                <h2>Vision</h2>
+                <p>Nous imaginons un futur où chaque interaction digitale devient une aventure mémorable. Notre vision est de transformer la façon dont les utilisateurs perçoivent et interagissent avec le web.</p>
+                <p>L'espace infini nous inspire à créer des interfaces sans limites.</p>
+            </div>
+        </section>
+
+        <section class="content-section" id="section4">
+            <div class="section-content">
+                <h2>Contact</h2>
+                <p>Prêt à embarquer pour un voyage cosmique ? Contactez-nous pour donner vie à vos projets les plus ambitieux. Ensemble, créons quelque chose d'extraordinaire.</p>
+                <p>L'aventure ne fait que commencer...</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Génération des étoiles
+        function createStars(container, count, sizeRange, opacityRange) {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * (sizeRange[1] - sizeRange[0]) + sizeRange[0];
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.opacity = Math.random() * (opacityRange[1] - opacityRange[0]) + opacityRange[0];
+                container.appendChild(star);
+            }
+        }
+
+        createStars(document.getElementById('starsFar'), 100, [1, 2], [0.3, 0.6]);
+        createStars(document.getElementById('starsMid'), 60, [2, 3], [0.5, 0.8]);
+        createStars(document.getElementById('starsNear'), 40, [2, 4], [0.7, 1]);
+
+        // Ajouter des planètes
+        const nebula = document.getElementById('nebula');
+        for (let i = 0; i < 3; i++) {
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            const size = Math.random() * 40 + 20;
+            planet.style.width = size + 'px';
+            planet.style.height = size + 'px';
+            planet.style.left = Math.random() * 80 + 10 + '%';
+            planet.style.top = Math.random() * 80 + 10 + '%';
+            nebula.appendChild(planet);
+        }
+
+        // Variables
+        let ticking = false;
+        let mouseX = 0;
+        let mouseY = 0;
+        let lastScrollY = 0;
+        const cosmicCreature = document.getElementById('cosmicCreature');
+        const creatureContainer = document.getElementById('creatureContainer');
+        const heroHeight = window.innerHeight;
+
+        // Fonction de parallax
+        function updateParallax() {
+            const scroll = window.pageYOffset;
+            const scrollDelta = Math.abs(scroll - lastScrollY);
+            
+            // Parallax du fond galaxie
+            const starsFar = document.getElementById('starsFar');
+            const starsMid = document.getElementById('starsMid');
+            const starsNear = document.getElementById('starsNear');
+            const nebula = document.getElementById('nebula');
+            
+            if (starsFar) starsFar.style.transform = `translateY(${scroll * 0.15}px)`;
+            if (starsMid) starsMid.style.transform = `translateY(${scroll * 0.3}px)`;
+            if (starsNear) starsNear.style.transform = `translateY(${scroll * 0.5}px)`;
+            if (nebula) nebula.style.transform = `translateY(${scroll * 0.25}px)`;
+            
+            // Parallax de l'ADN cosmique avec mouvement accentué au scroll
+            if (scroll > heroHeight) {
+                creatureContainer.classList.add('visible');
+                const scrollAfterHero = scroll - heroHeight;
+                const totalScrollHeight = document.querySelector('.scroll-container').offsetHeight;
+                
+                // Position verticale de base
+                const creatureOffset = -(scrollAfterHero / totalScrollHeight) * 300;
+                
+                // Ajout d'un léger effet de balancement proportionnel à la vitesse de scroll
+                const swayAmount = Math.min(scrollDelta * 0.5, 15);
+                const direction = scroll > lastScrollY ? 1 : -1;
+                
+                cosmicCreature.style.transform = `translateY(${creatureOffset}vh) translateX(${swayAmount * direction}px) rotate(${swayAmount * direction * 0.3}deg)`;
+            } else {
+                creatureContainer.classList.remove('visible');
+            }
+            
+            lastScrollY = scroll;
+            
+            // Navigation sticky
+            const navbar = document.getElementById('navbar');
+            if (scroll > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            ticking = false;
+        }
+
+        // Parallax au mouvement de la souris
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 30;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 30;
+            
+            const scroll = window.pageYOffset;
+            const starsNear = document.getElementById('starsNear');
+            const starsMid = document.getElementById('starsMid');
+            
+            if (starsNear) {
+                const currentTransform = `translateY(${scroll * 0.5}px) translate(${mouseX}px, ${mouseY}px)`;
+                starsNear.style.transform = currentTransform;
+            }
+            
+            if (starsMid) {
+                const currentTransform = `translateY(${scroll * 0.3}px) translate(${mouseX * 0.5}px, ${mouseY * 0.5}px)`;
+                starsMid.style.transform = currentTransform;
+            }
+        });
+
+        // Scroll event
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        });
+
+        // Menu burger
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('navLinks');
+        
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Scroll fluide
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Initialisation
+        updateParallax();
+    </script>
+</body>
+</html>
