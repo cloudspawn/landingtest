@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulting tech pour accélérer votre transformation digitale. Stratégie, architecture, développement.">
+    
+    <title>NOVA — Consulting Tech</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+/* ============================================
+   PARALLAX GALAXY - CONSULTING LANDING PAGE
+   ============================================ */
+
+:root {
+    --cyan: #00d4ff;
+    --cyan-dim: rgba(0, 212, 255, 0.15);
+    --purple: #7b2ff7;
+    --dark: #050510;
+    --dark-light: #0a0a1a;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
+    
+    --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    font-weight: 300;
+    color: var(--text-primary);
+    background: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+/* ---------- NAVIGATION ---------- */
+.nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.25rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    transition: background 0.3s, transform 0.5s var(--transition-smooth);
+    transform: translateY(-100%);
+}
+
+.nav.visible { transform: translateY(0); }
+
+.nav.scrolled {
+    background: rgba(5, 5, 15, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.nav__logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.nav__links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav__link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.nav__link:hover { color: var(--text-primary); }
+
+.nav__cta {
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.nav__cta:hover {
+    background: var(--cyan);
+    color: var(--dark);
+}
+
+.nav__burger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 6px;
+}
+
+.nav__burger span {
+    width: 28px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s;
+}
+
+/* ---------- FOND PARALLAX ---------- */
+.galaxy {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, var(--dark) 100%);
+}
+
+.galaxy__nebula {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background: 
+        radial-gradient(ellipse at 20% 80%, rgba(123, 47, 247, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 40%);
+}
+
+.galaxy__layer {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+}
+
+.galaxy__star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+
+.galaxy__star--twinkle {
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ---------- CANVAS RÉSEAU ---------- */
+.network {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.network.visible { opacity: 1; }
+
+.network__canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* ---------- SECTIONS ---------- */
+.section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem;
+    position: relative;
+}
+
+.section--hero { padding-top: 0; }
+
+/* Fond subtil avec dégradé doux pour les sections alternées */
+.section--tinted {
+    position: relative;
+}
+
+.section--tinted::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.15) 15%,
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.15) 85%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    text-align: center;
+    max-width: 900px;
+}
+
+.hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s var(--transition-smooth) 0.3s forwards;
+}
+
+.hero__title em {
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+.hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    opacity: 0;
+    animation: fadeUp 1s var(--transition-smooth) 0.6s forwards;
+}
+
+.hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: var(--cyan);
+    border: none;
+    color: var(--dark);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0;
+    animation: fadeUp 1s var(--transition-smooth) 0.9s forwards;
+}
+
+.hero__cta:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+}
+
+.hero__scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s var(--transition-smooth) 1.2s forwards;
+}
+
+.hero__scroll-text {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.hero__scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--text-muted), transparent);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: var(--cyan);
+    animation: scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollLine {
+    0% { top: -15px; opacity: 0; }
+    30% { opacity: 1; }
+    100% { top: 40px; opacity: 0; }
+}
+
+/* ---------- SERVICES ---------- */
+.services {
+    max-width: 1200px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.services__header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.services__label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 1rem;
+}
+
+.services__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 500;
+}
+
+.services__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.service-card {
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.service-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(0, 212, 255, 0.3);
+    transform: translateY(-5px);
+}
+
+.service-card__icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1.5rem;
+    stroke: var(--cyan);
+}
+
+.service-card__title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.service-card__text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ---------- SOCIAL PROOF ---------- */
+.proof {
+    max-width: 1000px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.proof__clients {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    margin-bottom: 5rem;
+    opacity: 0.5;
+}
+
+.proof__client-logo {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+}
+
+.proof__testimonial {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.proof__quote {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.proof__author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.proof__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+}
+
+.proof__author-info { text-align: left; }
+
+.proof__author-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    font-style: normal;
+}
+
+.proof__author-role {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ---------- CTA FINAL ---------- */
+.cta-section {
+    text-align: center;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.cta-section__text {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+}
+
+.cta-section__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.cta-section__button:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--cyan);
+    transform: scale(1.05);
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.2);
+}
+
+/* ---------- FOOTER ---------- */
+.footer {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.footer__text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ---------- REVEAL ANIMATION ---------- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s var(--transition-smooth);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px) {
+    .services__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .nav { padding: 1rem 1.5rem; }
+    
+    .nav__links {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100vh;
+        width: 70%;
+        background: rgba(5, 5, 15, 0.98);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        transition: right 0.3s;
+    }
+    
+    .nav__links.active { right: 0; }
+    .nav__burger { display: flex; }
+    .nav__cta { display: none; }
+    .services__grid { grid-template-columns: 1fr; }
+    .proof__clients { flex-wrap: wrap; gap: 2rem; }
+    .cta-section__button { width: 150px; height: 150px; }
+    .section { padding: 4rem 1.5rem; }
+}
+    </style>
+</head>
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav" id="nav">
+        <a href="#hero" class="nav__logo">NOVA</a>
+        
+        <ul class="nav__links" id="navLinks">
+            <li><a href="#hero" class="nav__link">Accueil</a></li>
+            <li><a href="#services" class="nav__link">Services</a></li>
+            <li><a href="#clients" class="nav__link">Clients</a></li>
+            <li><a href="#contact" class="nav__link">Contact</a></li>
+        </ul>
+        
+        <a href="#contact" class="nav__cta">Parlons-en</a>
+        
+        <div class="nav__burger" id="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- ========== FOND PARALLAX ========== -->
+    <div class="galaxy">
+        <div class="galaxy__nebula"></div>
+        <div class="galaxy__layer" id="layerFar"></div>
+        <div class="galaxy__layer" id="layerMid"></div>
+        <div class="galaxy__layer" id="layerNear"></div>
+    </div>
+
+    <!-- ========== RÉSEAU CONSTELLATION ========== -->
+    <div class="network" id="network">
+        <canvas class="network__canvas" id="networkCanvas"></canvas>
+    </div>
+
+    <!-- ========== HERO ========== -->
+    <section class="section section--hero" id="hero">
+        <div class="hero">
+            <h1 class="hero__title">
+                Accélérez votre<br><em>transformation digitale</em>
+            </h1>
+            
+            <p class="hero__subtitle">
+                Conseil stratégique et expertise technique pour les entreprises 
+                qui veulent construire le futur, pas le subir.
+            </p>
+            
+            <a href="#contact" class="hero__cta">
+                Démarrer un projet
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div class="hero__scroll">
+            <span class="hero__scroll-text">Scroll</span>
+            <div class="hero__scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ========== SERVICES ========== -->
+    <section class="section section--tinted" id="services">
+        <div class="services">
+            <header class="services__header reveal">
+                <p class="services__label">Ce que nous faisons</p>
+                <h2 class="services__title">Expertise technique, vision stratégique</h2>
+            </header>
+            
+            <div class="services__grid">
+                <article class="service-card reveal reveal-delay-1">
+                    <svg class="service-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="24" cy="24" r="20"/>
+                        <path d="M24 14v10l7 7"/>
+                    </svg>
+                    <h3 class="service-card__title">Stratégie Tech</h3>
+                    <p class="service-card__text">
+                        Audit de votre infrastructure, roadmap technologique, 
+                        choix d'architecture. Nous alignons votre tech sur vos objectifs business.
+                    </p>
+                </article>
+                
+                <article class="service-card reveal reveal-delay-2">
+                    <svg class="service-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="8" y="8" width="32" height="32" rx="4"/>
+                        <path d="M16 24h16M24 16v16"/>
+                    </svg>
+                    <h3 class="service-card__title">Développement</h3>
+                    <p class="service-card__text">
+                        Applications web et mobile, APIs, microservices. 
+                        Du prototype au produit scalable, avec les meilleures pratiques.
+                    </p>
+                </article>
+                
+                <article class="service-card reveal reveal-delay-3">
+                    <svg class="service-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M24 4l20 12v16L24 44 4 32V16L24 4z"/>
+                        <circle cx="24" cy="24" r="8"/>
+                    </svg>
+                    <h3 class="service-card__title">Cloud & DevOps</h3>
+                    <p class="service-card__text">
+                        Migration cloud, CI/CD, infrastructure as code. 
+                        Optimisez vos coûts et accélérez vos déploiements.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SOCIAL PROOF ========== -->
+    <section class="section" id="clients">
+        <div class="proof">
+            <div class="proof__clients reveal">
+                <span class="proof__client-logo">STARTUP.IO</span>
+                <span class="proof__client-logo">FINTECH+</span>
+                <span class="proof__client-logo">MEDTECH</span>
+                <span class="proof__client-logo">RETAILX</span>
+            </div>
+            
+            <blockquote class="proof__testimonial reveal">
+                <p class="proof__quote">
+                    "Nova a transformé notre approche technique. En 6 mois, 
+                    nous avons réduit nos coûts cloud de 40% tout en doublant 
+                    notre capacité de déploiement."
+                </p>
+                
+                <footer class="proof__author">
+                    <div class="proof__avatar"></div>
+                    <div class="proof__author-info">
+                        <cite class="proof__author-name">Marie Laurent</cite>
+                        <span class="proof__author-role">CTO, Fintech+</span>
+                    </div>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- ========== CTA FINAL ========== -->
+    <section class="section section--tinted" id="contact">
+        <div class="cta-section reveal">
+            <h2 class="cta-section__title">Prêt à passer au niveau supérieur ?</h2>
+            <p class="cta-section__text">
+                Discutons de votre projet. Premier échange sans engagement.
+            </p>
+            <a href="mailto:contact@nova-consulting.com" class="cta-section__button">
+                Contactez-nous
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p class="footer__text">© 2025 Nova Consulting. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+/* ============================================
+   PARALLAX GALAXY - OPTIMIZED
+   ============================================ */
+(function() {
+    'use strict';
+
+    const CONFIG = {
+        stars: {
+            far:  { count: 100, minSize: 1, maxSize: 1.5, minOp: 0.2, maxOp: 0.5, parallax: 0.15 },
+            mid:  { count: 60,  minSize: 1.5, maxSize: 2.5, minOp: 0.4, maxOp: 0.7, parallax: 0.3 },
+            near: { count: 40,  minSize: 2, maxSize: 3.5, minOp: 0.6, maxOp: 1, parallax: 0.5 }
+        },
+        network: { nodes: 35, connectionDistance: 120, opacity: 0.12 },
+        mobile: { stars: { far: 60, mid: 35, near: 25 }, nodes: 20 }
+    };
+
+    const isMobile = window.innerWidth < 768;
+
+    const DOM = {
+        nav: document.getElementById('nav'),
+        navLinks: document.getElementById('navLinks'),
+        burger: document.getElementById('burger'),
+        galaxy: {
+            far: document.getElementById('layerFar'),
+            mid: document.getElementById('layerMid'),
+            near: document.getElementById('layerNear')
+        },
+        network: document.getElementById('network'),
+        canvas: document.getElementById('networkCanvas'),
+        revealElements: document.querySelectorAll('.reveal')
+    };
+
+    const ctx = DOM.canvas?.getContext('2d');
+    let state = { time: 0, scrollY: 0, mouseX: 0, mouseY: 0, isRunning: true };
+
+    // Stars
+    const Stars = {
+        create(container, config, countOverride) {
+            const count = countOverride || config.count;
+            const fragment = document.createDocumentFragment();
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'galaxy__star' + (Math.random() > 0.8 ? ' galaxy__star--twinkle' : '');
+                const size = config.minSize + Math.random() * (config.maxSize - config.minSize);
+                Object.assign(star.style, {
+                    width: size + 'px', height: size + 'px',
+                    left: Math.random() * 100 + '%', top: Math.random() * 100 + '%',
+                    opacity: config.minOp + Math.random() * (config.maxOp - config.minOp)
+                });
+                if (star.classList.contains('galaxy__star--twinkle')) {
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                }
+                fragment.appendChild(star);
+            }
+            container.appendChild(fragment);
+        },
+
+        init() {
+            const s = CONFIG.stars, m = CONFIG.mobile.stars;
+            this.create(DOM.galaxy.far, s.far, isMobile ? m.far : null);
+            this.create(DOM.galaxy.mid, s.mid, isMobile ? m.mid : null);
+            this.create(DOM.galaxy.near, s.near, isMobile ? m.near : null);
+        },
+
+        update() {
+            const { scrollY, mouseX, mouseY, time } = state;
+            const s = CONFIG.stars;
+            
+            DOM.galaxy.far.style.transform = `translate(${Math.sin(time * 0.05) * 10 + mouseX * 10}px, ${Math.cos(time * 0.05) * 8 - scrollY * s.far.parallax}px)`;
+            DOM.galaxy.mid.style.transform = `translate(${Math.sin(time * 0.07) * 20 + mouseX * 20}px, ${Math.cos(time * 0.07) * 12 - scrollY * s.mid.parallax}px)`;
+            DOM.galaxy.near.style.transform = `translate(${Math.sin(time * 0.08) * 30 + mouseX * 35}px, ${Math.cos(time * 0.08) * 18 - scrollY * s.near.parallax}px)`;
+        }
+    };
+
+    // Network
+    const Network = {
+        nodes: [],
+        
+        init() {
+            if (!ctx) return;
+            this.resize();
+            window.addEventListener('resize', () => this.resize());
+            
+            const nodeCount = isMobile ? CONFIG.mobile.nodes : CONFIG.network.nodes;
+            for (let i = 0; i < nodeCount; i++) {
+                this.nodes.push({
+                    x: Math.random(), y: Math.random() * 3,
+                    baseX: Math.random(), baseY: Math.random() * 3,
+                    size: 1.5 + Math.random() * 2,
+                    speed: 0.0002 + Math.random() * 0.0003,
+                    angle: Math.random() * Math.PI * 2
+                });
+            }
+        },
+
+        resize() {
+            if (!DOM.canvas) return;
+            DOM.canvas.width = window.innerWidth;
+            DOM.canvas.height = window.innerHeight;
+        },
+
+        update() {
+            if (!ctx) return;
+            
+            const { scrollY, time, mouseX } = state;
+            const viewHeight = window.innerHeight;
+            const scrollProgress = scrollY / (document.body.scrollHeight - viewHeight);
+            const shouldShow = scrollY > viewHeight * 0.3;
+            
+            DOM.network.classList.toggle('visible', shouldShow);
+            if (!shouldShow) return;
+
+            ctx.clearRect(0, 0, DOM.canvas.width, DOM.canvas.height);
+
+            const offsetX = Math.sin(time * 0.03) * 8 + mouseX * 20;
+            const scrollOffset = scrollProgress * 2.5;
+
+            this.nodes.forEach(node => {
+                node.angle += node.speed;
+                node.x = node.baseX + Math.sin(node.angle) * 0.03;
+                node.y = node.baseY + Math.cos(node.angle) * 0.03;
+            });
+
+            const maxDist = CONFIG.network.connectionDistance;
+            for (let i = 0; i < this.nodes.length; i++) {
+                for (let j = i + 1; j < this.nodes.length; j++) {
+                    const n1 = this.nodes[i], n2 = this.nodes[j];
+                    const x1 = n1.x * DOM.canvas.width + offsetX;
+                    const y1 = (n1.y - scrollOffset) * viewHeight;
+                    const x2 = n2.x * DOM.canvas.width + offsetX;
+                    const y2 = (n2.y - scrollOffset) * viewHeight;
+                    
+                    if (y1 < -100 || y1 > viewHeight + 100 || y2 < -100 || y2 > viewHeight + 100) continue;
+                    
+                    const dist = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+                    if (dist < maxDist) {
+                        ctx.strokeStyle = `rgba(0, 212, 255, ${(1 - dist / maxDist) * CONFIG.network.opacity})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            this.nodes.forEach(node => {
+                const x = node.x * DOM.canvas.width + offsetX;
+                const y = (node.y - scrollOffset) * viewHeight;
+                if (y < -50 || y > viewHeight + 50) return;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.beginPath();
+                ctx.arc(x, y, node.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+    };
+
+    // Navigation
+    const Navigation = {
+        init() {
+            setTimeout(() => DOM.nav.classList.add('visible'), 1500);
+            DOM.burger?.addEventListener('click', () => DOM.navLinks.classList.toggle('active'));
+            
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                        DOM.navLinks.classList.remove('active');
+                    }
+                });
+            });
+        },
+        update() { DOM.nav.classList.toggle('scrolled', state.scrollY > 100); }
+    };
+
+    // Reveal
+    const Reveal = {
+        init() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+            DOM.revealElements.forEach(el => observer.observe(el));
+        }
+    };
+
+    // Loop
+    function animate() {
+        if (!state.isRunning) return;
+        state.time += 0.016;
+        Stars.update();
+        Network.update();
+        Navigation.update();
+        requestAnimationFrame(animate);
+    }
+
+    // Init
+    function init() {
+        Stars.init();
+        Network.init();
+        Navigation.init();
+        Reveal.init();
+        
+        window.addEventListener('scroll', () => { state.scrollY = window.scrollY; }, { passive: true });
+        document.addEventListener('mousemove', (e) => {
+            state.mouseX = (e.clientX / window.innerWidth) - 0.5;
+            state.mouseY = (e.clientY / window.innerHeight) - 0.5;
+        }, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            state.isRunning = !document.hidden;
+            if (state.isRunning) animate();
+        });
+        
+        animate();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+    </script>
+
+</body>
+</html>
