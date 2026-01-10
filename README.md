@@ -8,6 +8,7 @@ test rapid paralax galaxy
 - https://cloudspawn.github.io/landingtest/parallax-galaxy-vf.html
 ### plus sobre
   - https://cloudspawn.github.io/landingtest/nova-consulting-v2.html
+  - https://cloudspawn.github.io/landingtest/nova-consulting-v3.html
 
 # Parallax Galaxy - Documentation & Prompt Réutilisable
 
