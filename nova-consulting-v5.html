@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulting tech pour accélérer votre transformation digitale.">
+    <title>NOVA — Consulting Tech</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+:root {
+    --cyan: #00d4ff;
+    --purple: #7b2ff7;
+    --dark: #050510;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
+    --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body);
+    font-weight: 300;
+    color: var(--text-primary);
+    background: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html { scroll-behavior: auto; }
+}
+
+/* NAV */
+.nav {
+    position: fixed; top: 0; width: 100%; padding: 1.25rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000; transition: background 0.3s, transform 0.5s var(--transition-smooth);
+    transform: translateY(-100%);
+}
+.nav.visible { transform: translateY(0); }
+.nav.scrolled { background: rgba(5, 5, 15, 0.95); backdrop-filter: blur(10px); }
+.nav__logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: 0.4em; color: var(--text-primary); text-decoration: none; }
+.nav__links { display: flex; gap: 2rem; list-style: none; }
+.nav__link { color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
+.nav__link:hover { color: var(--text-primary); }
+.nav__cta { padding: 0.6rem 1.5rem; background: transparent; border: 1px solid var(--cyan); color: var(--cyan); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; }
+.nav__cta:hover { background: var(--cyan); color: var(--dark); }
+.nav__burger { display: none; flex-direction: column; cursor: pointer; gap: 6px; }
+.nav__burger span { width: 28px; height: 2px; background: white; }
+
+/* PARALLAX CONTAINER */
+.parallax-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+    background: radial-gradient(ellipse at center, #0d0d1a 0%, var(--dark) 70%);
+}
+.nebula {
+    position: absolute; inset: 0; opacity: 0.35;
+    background: 
+        radial-gradient(ellipse at 15% 85%, rgba(123, 47, 247, 0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 15%, rgba(0, 212, 255, 0.12) 0%, transparent 45%);
+}
+
+/* CANVAS LAYERS */
+.layer-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+}
+.layer-stars { z-index: -1; }
+.layer-network { z-index: 0; }
+
+/* SECTIONS */
+.section {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 6rem 2rem; position: relative;
+}
+.section--hero { padding-top: 0; }
+.section--tinted::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.15) 85%, transparent 100%);
+    pointer-events: none;
+}
+
+/* HERO */
+.hero { text-align: center; max-width: 900px; position: relative; z-index: 2; }
+.hero__title {
+    font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 500; line-height: 1.1; margin-bottom: 1.5rem;
+    opacity: 0; transform: translateY(40px);
+    animation: fadeUp 1s var(--transition-smooth) 0.3s forwards;
+}
+.hero__title em { font-style: italic; color: var(--text-secondary); }
+.hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.25rem); color: var(--text-secondary);
+    max-width: 600px; margin: 0 auto 2.5rem;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 0.6s forwards;
+}
+.hero__cta {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    padding: 1rem 2.5rem; background: var(--cyan); border: none;
+    color: var(--dark); font-size: 0.9rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+    cursor: pointer; transition: all 0.3s;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 0.9s forwards;
+}
+.hero__cta:hover { background: white; transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3); }
+.hero__scroll {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 1.2s forwards;
+}
+.hero__scroll-text { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+.hero__scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--text-muted), transparent); position: relative; overflow: hidden; }
+.hero__scroll-line::after { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: var(--cyan); animation: scrollLine 2s ease-in-out infinite; }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes scrollLine { 0% { top: -15px; opacity: 0; } 30% { opacity: 1; } 100% { top: 40px; opacity: 0; } }
+
+/* SERVICES */
+.services { max-width: 1200px; width: 100%; position: relative; z-index: 2; }
+.services__header { text-align: center; margin-bottom: 4rem; }
+.services__label { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; }
+.services__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); font-weight: 500; }
+.services__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.service-card { padding: 2.5rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); transition: all 0.4s var(--transition-smooth); }
+.service-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(0,212,255,0.3); transform: translateY(-5px); }
+.service-card__icon { width: 48px; height: 48px; margin-bottom: 1.5rem; stroke: var(--cyan); }
+.service-card__title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; }
+.service-card__text { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+
+/* PROOF */
+.proof { max-width: 1000px; width: 100%; position: relative; z-index: 2; }
+.proof__clients { display: flex; justify-content: center; gap: 4rem; margin-bottom: 5rem; opacity: 0.5; }
+.proof__client-logo { font-size: 1.25rem; font-weight: 500; letter-spacing: 0.1em; color: var(--text-secondary); }
+.proof__testimonial { text-align: center; max-width: 700px; margin: 0 auto; }
+.proof__quote { font-family: var(--font-display); font-size: clamp(1.25rem, 3vw, 1.75rem); font-style: italic; line-height: 1.6; margin-bottom: 2rem; color: var(--text-secondary); }
+.proof__author { display: flex; align-items: center; justify-content: center; gap: 1rem; }
+.proof__avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--cyan), var(--purple)); }
+.proof__author-info { text-align: left; }
+.proof__author-name { font-weight: 500; font-size: 0.95rem; font-style: normal; }
+.proof__author-role { font-size: 0.8rem; color: var(--text-muted); }
+
+/* CTA SECTION */
+.cta-section { text-align: center; max-width: 700px; position: relative; z-index: 2; }
+.cta-section__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 500; margin-bottom: 1.5rem; }
+.cta-section__text { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 3rem; }
+
+/* === BOUTON CONTACT CONTRASTÉ === */
+.cta-section__button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(123, 47, 247, 0.15));
+    border: 2px solid rgba(0, 212, 255, 0.5);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.4s var(--transition-smooth);
+    overflow: visible;
+}
+
+/* Anneau extérieur animé */
+.cta-section__button::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--cyan), var(--purple), var(--cyan)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.6;
+    animation: rotateRing 8s linear infinite;
+}
+
+/* Glow pulsant */
+.cta-section__button::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+    animation: pulseGlow 3s ease-in-out infinite;
+    z-index: -1;
+}
+
+.cta-section__button:hover {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(123, 47, 247, 0.3));
+    border-color: var(--cyan);
+    transform: scale(1.08);
+    box-shadow: 
+        0 0 40px rgba(0, 212, 255, 0.4),
+        0 0 80px rgba(123, 47, 247, 0.2);
+}
+
+.cta-section__button:hover::before {
+    opacity: 1;
+    animation-duration: 3s;
+}
+
+@keyframes rotateRing {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* FOOTER */
+.footer { padding: 3rem 2rem; text-align: center; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-subtle); }
+.footer__text { font-size: 0.8rem; color: var(--text-muted); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s var(--transition-smooth); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) { .services__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) {
+    .nav { padding: 1rem 1.5rem; }
+    .nav__links { position: fixed; right: -100%; top: 0; height: 100vh; width: 70%; background: rgba(5,5,15,0.98); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; transition: right 0.3s; }
+    .nav__links.active { right: 0; }
+    .nav__burger { display: flex; }
+    .nav__cta { display: none; }
+    .services__grid { grid-template-columns: 1fr; }
+    .proof__clients { flex-wrap: wrap; gap: 2rem; }
+    .cta-section__button { width: 160px; height: 160px; font-size: 0.8rem; }
+    .section { padding: 4rem 1.5rem; }
+}
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nav" id="nav">
+        <a href="#hero" class="nav__logo">NOVA</a>
+        <ul class="nav__links" id="navLinks">
+            <li><a href="#hero" class="nav__link">Accueil</a></li>
+            <li><a href="#services" class="nav__link">Services</a></li>
+            <li><a href="#clients" class="nav__link">Clients</a></li>
+            <li><a href="#contact" class="nav__link">Contact</a></li>
+        </ul>
+        <a href="#contact" class="nav__cta">Parlons-en</a>
+        <div class="nav__burger" id="burger"><span></span><span></span><span></span></div>
+    </nav>
+
+    <!-- BACKGROUND -->
+    <div class="parallax-bg"><div class="nebula"></div></div>
+    
+    <!-- STARS LAYER -->
+    <canvas class="layer-canvas layer-stars" id="starsCanvas"></canvas>
+    
+    <!-- NETWORK LAYER -->
+    <canvas class="layer-canvas layer-network" id="networkCanvas"></canvas>
+
+    <!-- HERO -->
+    <section class="section section--hero" id="hero">
+        <div class="hero">
+            <h1 class="hero__title">Accélérez votre<br><em>transformation digitale</em></h1>
+            <p class="hero__subtitle">Conseil stratégique et expertise technique pour les entreprises qui veulent construire le futur, pas le subir.</p>
+            <a href="#contact" class="hero__cta">Démarrer un projet <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="hero__scroll"><span class="hero__scroll-text">Scroll</span><div class="hero__scroll-line"></div></div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section section--tinted" id="services">
+        <div class="services">
+            <header class="services__header reveal">
+                <p class="services__label">Ce que nous faisons</p>
+                <h2 class="services__title">Expertise technique, vision stratégique</h2>
+            </header>
+            <div class="services__grid">
+                <article class="service-card reveal reveal-delay-1">
+                    <svg class="service-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="24" cy="24" r="20"/><path d="M24 14v10l7 7"/></svg>
+                    <h3 class="service-card__title">Stratégie Tech</h3>
+                    <p class="service-card__text">Audit de votre infrastructure, roadmap technologique, choix d'architecture.</p>
+                </article>
+                <article class="service-card reveal reveal-delay-2">
+                    <svg class="service-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="32" height="32" rx="4"/><path d="M16 24h16M24 16v16"/></svg>
+                    <h3 class="service-card__title">Développement</h3>
+                    <p class="service-card__text">Applications web et mobile, APIs, microservices scalables.</p>
+                </article>
+                <article class="service-card reveal reveal-delay-3">
+                    <svg class="service-card__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M24 4l20 12v16L24 44 4 32V16L24 4z"/><circle cx="24" cy="24" r="8"/></svg>
+                    <h3 class="service-card__title">Cloud & DevOps</h3>
+                    <p class="service-card__text">Migration cloud, CI/CD, infrastructure as code.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section class="section" id="clients">
+        <div class="proof">
+            <div class="proof__clients reveal">
+                <span class="proof__client-logo">STARTUP.IO</span>
+                <span class="proof__client-logo">FINTECH+</span>
+                <span class="proof__client-logo">MEDTECH</span>
+                <span class="proof__client-logo">RETAILX</span>
+            </div>
+            <blockquote class="proof__testimonial reveal">
+                <p class="proof__quote">"Nova a transformé notre approche technique. En 6 mois, nous avons réduit nos coûts cloud de 40%."</p>
+                <footer class="proof__author">
+                    <div class="proof__avatar"></div>
+                    <div class="proof__author-info">
+                        <cite class="proof__author-name">Marie Laurent</cite>
+                        <span class="proof__author-role">CTO, Fintech+</span>
+                    </div>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--tinted" id="contact">
+        <div class="cta-section reveal">
+            <h2 class="cta-section__title">Prêt à passer au niveau supérieur ?</h2>
+            <p class="cta-section__text">Discutons de votre projet. Premier échange sans engagement.</p>
+            <a href="mailto:contact@nova-consulting.com" class="cta-section__button">Contactez-nous</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer"><p class="footer__text">© 2025 Nova Consulting. Tous droits réservés.</p></footer>
+
+    <script>
+/* ============================================
+   PARALLAX STARS + NEURAL NETWORK
+   Network ends at button with fade
+   ============================================ */
+(function() {
+    'use strict';
+
+    // === CONFIG ===
+    const CONFIG = {
+        stars: {
+            layers: [
+                { count: 100, size: [0.5, 1.5], opacity: [0.2, 0.5], parallax: 0.03, drift: 0.02 },
+                { count: 70,  size: [1, 2.5],   opacity: [0.3, 0.7], parallax: 0.1,  drift: 0.04 },
+                { count: 50,  size: [1.5, 3],   opacity: [0.5, 1],   parallax: 0.2,  drift: 0.06 }
+            ],
+            colors: [
+                { h: 0, s: 0, l: 100, w: 50 },
+                { h: 210, s: 25, l: 85, w: 18 },
+                { h: 190, s: 60, l: 75, w: 14 },
+                { h: 270, s: 45, l: 78, w: 12 },
+                { h: 200, s: 40, l: 80, w: 6 }
+            ]
+        },
+        
+        shootingStars: {
+            enabled: true,
+            frequency: 0.003,
+            minSpeed: 8,
+            maxSpeed: 15,
+            minLength: 50,
+            maxLength: 120,
+            colors: ['#00d4ff', '#7b2ff7', '#ffffff']
+        },
+        
+        network: {
+            parallax: 0.55,
+            startY: 0.62,        // Sous le CTA hero
+            endY: 3.15,          // Se termine SOUS le bouton Contact (avant le footer)
+            
+            // Fade aux extrémités
+            fadeStartZone: 0.15,  // Fade sur les premiers 15%
+            fadeEndZone: 0.2,     // Fade sur les derniers 20% (plus prononcé)
+            
+            nodesPerSection: 8,
+            branchesPerNode: 2,
+            nodeSize: 4,
+            lineOpacity: 0.2,
+            trembleAmount: 2.5,
+            
+            pulseEnabled: true,
+            pulseSpeed: 2,
+            pulseIntensity: 0.3
+        },
+        
+        mouse: { influence: 15, smoothing: 0.06 }
+    };
+
+    const isMobile = window.innerWidth < 768;
+
+    // === STATE ===
+    const state = {
+        time: 0,
+        scrollY: 0,
+        mouseX: 0, mouseY: 0,
+        smoothMouseX: 0, smoothMouseY: 0,
+        viewHeight: 0,
+        isRunning: true,
+        shootingStars: []
+    };
+
+    // === CANVAS ===
+    const starsCanvas = document.getElementById('starsCanvas');
+    const networkCanvas = document.getElementById('networkCanvas');
+    const starsCtx = starsCanvas.getContext('2d');
+    const networkCtx = networkCanvas.getContext('2d');
+
+    // === DATA ===
+    let starsData = [];
+    let networkNodes = [];
+
+    // === HELPERS ===
+    function pickColor() {
+        const colors = CONFIG.stars.colors;
+        const total = colors.reduce((s, c) => s + c.w, 0);
+        let r = Math.random() * total;
+        for (const c of colors) { r -= c.w; if (r <= 0) return c; }
+        return colors[0];
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function rand(min, max) { return min + Math.random() * (max - min); }
+
+    // === INIT STARS ===
+    function initStars() {
+        starsData = [];
+        CONFIG.stars.layers.forEach((layer, layerIndex) => {
+            const count = isMobile ? Math.floor(layer.count * 0.6) : layer.count;
+            for (let i = 0; i < count; i++) {
+                const color = pickColor();
+                starsData.push({
+                    layer: layerIndex,
+                    x: Math.random() * 120 - 10,
+                    y: Math.random() * 140 - 20,
+                    baseX: 0, baseY: 0,
+                    size: lerp(layer.size[0], layer.size[1], Math.random()),
+                    opacity: lerp(layer.opacity[0], layer.opacity[1], Math.random()),
+                    parallax: layer.parallax,
+                    drift: layer.drift,
+                    driftAngle: Math.random() * Math.PI * 2,
+                    driftSpeed: 0.2 + Math.random() * 0.3,
+                    twinkle: { speed: 0.5 + Math.random() * 2, offset: Math.random() * Math.PI * 2 },
+                    color
+                });
+            }
+        });
+        starsData.forEach(s => { s.baseX = s.x; s.baseY = s.y; });
+    }
+
+    // === INIT NETWORK ===
+    function initNetwork() {
+        networkNodes = [];
+        const { startY, endY, nodesPerSection, branchesPerNode } = CONFIG.network;
+        
+        const totalHeight = endY - startY;
+        const totalMainNodes = Math.floor(totalHeight * nodesPerSection);
+        
+        const mainPath = [];
+        for (let i = 0; i <= totalMainNodes; i++) {
+            const t = i / totalMainNodes;
+            const y = startY + t * totalHeight;
+            
+            const baseX = 0.5;
+            const amplitude = 0.18;
+            const zigzag = Math.sin(t * Math.PI * 4) * amplitude;
+            const x = baseX + zigzag;
+            
+            // Le dernier noeud converge vers le centre (sous le bouton)
+            const finalX = i === totalMainNodes ? 0.5 : x;
+            
+            const node = {
+                id: networkNodes.length,
+                type: i % Math.floor(nodesPerSection / 2) === 0 ? 'main' : 'path',
+                y, 
+                x: finalX,
+                size: i % Math.floor(nodesPerSection / 2) === 0 ? CONFIG.network.nodeSize : CONFIG.network.nodeSize * 0.7,
+                connections: [],
+                // Position normalisée dans le réseau (0 = début, 1 = fin)
+                networkPosition: t
+            };
+            
+            networkNodes.push(node);
+            mainPath.push(node.id);
+        }
+        
+        for (let i = 0; i < mainPath.length - 1; i++) {
+            networkNodes[mainPath[i]].connections.push(mainPath[i + 1]);
+        }
+        
+        mainPath.forEach((nodeId, idx) => {
+            if (idx === 0 || idx === mainPath.length - 1) return;
+            
+            const mainNode = networkNodes[nodeId];
+            const t = idx / mainPath.length;
+            
+            // Moins de branches vers la fin (convergence)
+            const branchProb = 1 - (t * 0.5);
+            
+            for (let b = 0; b < branchesPerNode; b++) {
+                if (Math.random() > branchProb) continue;
+                
+                const side = b % 2 === 0 ? -1 : 1;
+                // Branches plus courtes vers la fin
+                const branchLength = (1 - t * 0.6);
+                const offsetX = side * rand(0.06, 0.15) * branchLength;
+                const offsetY = rand(-0.1, 0.1) * branchLength;
+                
+                const branchNode = {
+                    id: networkNodes.length,
+                    type: 'branch',
+                    y: mainNode.y + offsetY,
+                    x: mainNode.x + offsetX,
+                    size: CONFIG.network.nodeSize * 0.5,
+                    connections: [],
+                    networkPosition: mainNode.networkPosition
+                };
+                
+                mainNode.connections.push(branchNode.id);
+                networkNodes.push(branchNode);
+                
+                if (Math.random() > 0.6 && t < 0.7) {
+                    const subBranch = {
+                        id: networkNodes.length,
+                        type: 'subbranch',
+                        y: branchNode.y + rand(-0.06, 0.06),
+                        x: branchNode.x + side * rand(0.03, 0.08),
+                        size: CONFIG.network.nodeSize * 0.35,
+                        connections: [],
+                        networkPosition: mainNode.networkPosition
+                    };
+                    branchNode.connections.push(subBranch.id);
+                    networkNodes.push(subBranch);
+                }
+            }
+        });
+        
+        networkNodes.forEach((node, i) => {
+            networkNodes.forEach((other, j) => {
+                if (i >= j) return;
+                if (node.connections.includes(j)) return;
+                
+                const dx = Math.abs(node.x - other.x);
+                const dy = Math.abs(node.y - other.y);
+                
+                if (dx < 0.1 && dy < 0.15 && dy > 0.03 && Math.random() > 0.65) {
+                    node.connections.push(j);
+                }
+            });
+        });
+    }
+
+    // === SHOOTING STARS ===
+    function createShootingStar() {
+        const { shootingStars: cfg } = CONFIG;
+        const w = starsCanvas.width;
+        const h = starsCanvas.height;
+        
+        const fromTop = Math.random() > 0.5;
+        const x = fromTop ? rand(w * 0.2, w * 0.8) : w + 10;
+        const y = fromTop ? -10 : rand(0, h * 0.5);
+        
+        const angle = fromTop ? rand(Math.PI * 0.55, Math.PI * 0.7) : rand(Math.PI * 0.6, Math.PI * 0.8);
+        
+        return {
+            x, y, angle,
+            speed: rand(cfg.minSpeed, cfg.maxSpeed),
+            length: rand(cfg.minLength, cfg.maxLength),
+            opacity: 1,
+            color: cfg.colors[Math.floor(Math.random() * cfg.colors.length)],
+            life: 1
+        };
+    }
+
+    function updateShootingStars() {
+        const { shootingStars: cfg } = CONFIG;
+        if (!cfg.enabled) return;
+        
+        if (Math.random() < cfg.frequency) {
+            state.shootingStars.push(createShootingStar());
+        }
+        
+        state.shootingStars = state.shootingStars.filter(star => {
+            star.x += Math.cos(star.angle) * star.speed;
+            star.y += Math.sin(star.angle) * star.speed;
+            star.life -= 0.015;
+            star.opacity = star.life;
+            
+            return star.life > 0 && star.x > -star.length && star.y < starsCanvas.height + star.length;
+        });
+    }
+
+    function drawShootingStars() {
+        const ctx = starsCtx;
+        
+        state.shootingStars.forEach(star => {
+            const tailX = star.x - Math.cos(star.angle) * star.length;
+            const tailY = star.y - Math.sin(star.angle) * star.length;
+            
+            const gradient = ctx.createLinearGradient(tailX, tailY, star.x, star.y);
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.7, `${star.color}${Math.floor(star.opacity * 100).toString(16).padStart(2, '0')}`);
+            gradient.addColorStop(1, star.color);
+            
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(tailX, tailY);
+            ctx.lineTo(star.x, star.y);
+            ctx.stroke();
+            
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, 2, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // === RESIZE ===
+    function resize() {
+        starsCanvas.width = networkCanvas.width = window.innerWidth;
+        starsCanvas.height = networkCanvas.height = window.innerHeight;
+        state.viewHeight = window.innerHeight;
+    }
+
+    // === DRAW STARS ===
+    function drawStars() {
+        const { time, scrollY, smoothMouseX, smoothMouseY, viewHeight } = state;
+        const ctx = starsCtx;
+        const w = starsCanvas.width;
+        const h = starsCanvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        starsData.forEach(star => {
+            star.driftAngle += star.driftSpeed * 0.01;
+            const driftX = Math.cos(star.driftAngle) * star.drift * 50;
+            const driftY = Math.sin(star.driftAngle) * star.drift * 30;
+
+            const parallaxY = scrollY * star.parallax;
+
+            const mouseX = smoothMouseX * CONFIG.mouse.influence * star.parallax * 3;
+            const mouseY = smoothMouseY * CONFIG.mouse.influence * star.parallax * 2;
+
+            let x = (star.baseX / 100) * w + driftX + mouseX;
+            let y = (star.baseY / 100) * h + driftY - parallaxY + mouseY;
+
+            const totalH = h * 1.4;
+            y = ((y % totalH) + totalH) % totalH - h * 0.2;
+
+            const twinkle = 0.7 + 0.3 * Math.sin(time * star.twinkle.speed + star.twinkle.offset);
+            const opacity = star.opacity * twinkle;
+
+            const c = star.color;
+            ctx.fillStyle = c.s > 0 
+                ? `hsla(${c.h}, ${c.s}%, ${c.l}%, ${opacity})`
+                : `rgba(255,255,255,${opacity})`;
+            ctx.beginPath();
+            ctx.arc(x, y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        
+        updateShootingStars();
+        drawShootingStars();
+    }
+
+    // === DRAW NETWORK ===
+    function drawNetwork() {
+        const { time, scrollY, smoothMouseX, smoothMouseY, viewHeight } = state;
+        const ctx = networkCtx;
+        const w = networkCanvas.width;
+        const h = networkCanvas.height;
+        const { parallax, lineOpacity, trembleAmount, pulseEnabled, pulseSpeed, pulseIntensity, fadeStartZone, fadeEndZone } = CONFIG.network;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const screenNodes = networkNodes.map(node => {
+            const docY = node.y * viewHeight;
+            const screenY = docY - scrollY * parallax;
+            
+            const mx = smoothMouseX * CONFIG.mouse.influence;
+            const my = smoothMouseY * CONFIG.mouse.influence * 0.5;
+
+            const trembleX = Math.sin(time * 2.5 + node.y * 4) * trembleAmount;
+            const trembleY = Math.cos(time * 2 + node.x * 6) * trembleAmount * 0.6;
+
+            // Calcul du fade basé sur la position dans le réseau
+            let networkFade = 1;
+            const pos = node.networkPosition || 0;
+            
+            // Fade au début
+            if (pos < fadeStartZone) {
+                networkFade = pos / fadeStartZone;
+            }
+            // Fade à la fin (plus prononcé)
+            else if (pos > (1 - fadeEndZone)) {
+                networkFade = (1 - pos) / fadeEndZone;
+            }
+
+            return {
+                x: node.x * w + mx + trembleX,
+                y: screenY + my + trembleY,
+                size: node.size,
+                type: node.type,
+                connections: node.connections,
+                visible: screenY > -200 && screenY < h + 200,
+                networkFade: Math.max(0, Math.min(1, networkFade))
+            };
+        });
+
+        // Connections
+        ctx.lineCap = 'round';
+        screenNodes.forEach((node, i) => {
+            node.connections.forEach(j => {
+                const other = screenNodes[j];
+                if (!other) return;
+                if (!node.visible && !other.visible) return;
+
+                const avgY = (node.y + other.y) / 2;
+                const distFromCenter = Math.abs(avgY - h / 2) / (h / 2);
+                let opacity = lineOpacity * (1 - distFromCenter * 0.5);
+                
+                // Appliquer le fade du réseau
+                opacity *= Math.min(node.networkFade, other.networkFade);
+                
+                if (node.y < 0) opacity *= Math.max(0, 1 + node.y / 150);
+                if (node.y > h) opacity *= Math.max(0, 1 - (node.y - h) / 150);
+                if (other.y < 0) opacity *= Math.max(0, 1 + other.y / 150);
+                if (other.y > h) opacity *= Math.max(0, 1 - (other.y - h) / 150);
+
+                if (opacity < 0.01) return;
+
+                const midX = (node.x + other.x) / 2 + Math.sin(time * 1.8 + i * 0.5) * 10;
+                const midY = (node.y + other.y) / 2 + Math.cos(time * 1.5 + j * 0.3) * 8;
+
+                const gradient = ctx.createLinearGradient(node.x, node.y, other.x, other.y);
+                gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity})`);
+                gradient.addColorStop(0.5, `rgba(123, 47, 247, ${opacity * 0.7})`);
+                gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity})`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = node.type === 'main' || other.type === 'main' ? 1.3 : 0.9;
+                ctx.beginPath();
+                ctx.moveTo(node.x, node.y);
+                ctx.quadraticCurveTo(midX, midY, other.x, other.y);
+                ctx.stroke();
+            });
+        });
+
+        // Nodes
+        screenNodes.forEach((node, i) => {
+            if (!node.visible) return;
+            if (node.y < -80 || node.y > h + 80) return;
+
+            const distFromCenter = Math.abs(node.y - h / 2) / (h / 2);
+            let opacity = 0.75 * (1 - distFromCenter * 0.4);
+            
+            // Appliquer le fade du réseau
+            opacity *= node.networkFade;
+            
+            if (node.y < 80) opacity *= node.y / 80;
+            if (node.y > h - 80) opacity *= (h - node.y) / 80;
+            
+            opacity = Math.max(0, Math.min(1, opacity));
+            if (opacity < 0.05) return;
+
+            let pulseScale = 1;
+            if (pulseEnabled && node.type === 'main') {
+                pulseScale = 1 + Math.sin(time * pulseSpeed + i) * pulseIntensity;
+            }
+
+            const glowSize = node.size * (node.type === 'main' ? 4.5 : 3) * pulseScale;
+            const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowSize);
+            gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity * 0.9})`);
+            gradient.addColorStop(0.4, `rgba(123, 47, 247, ${opacity * 0.35})`);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.size * pulseScale, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // === ANIMATE ===
+    function animate() {
+        if (!state.isRunning) return;
+
+        state.time += 0.016;
+
+        state.smoothMouseX += (state.mouseX - state.smoothMouseX) * CONFIG.mouse.smoothing;
+        state.smoothMouseY += (state.mouseY - state.smoothMouseY) * CONFIG.mouse.smoothing;
+
+        drawStars();
+        drawNetwork();
+
+        document.getElementById('nav').classList.toggle('scrolled', state.scrollY > 100);
+
+        requestAnimationFrame(animate);
+    }
+
+    // === EVENTS ===
+    window.addEventListener('scroll', () => { state.scrollY = window.scrollY; }, { passive: true });
+    window.addEventListener('resize', () => { resize(); initNetwork(); });
+    document.addEventListener('mousemove', e => {
+        state.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        state.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+        state.isRunning = !document.hidden;
+        if (state.isRunning) animate();
+    });
+
+    // === NAV ===
+    function initNav() {
+        const nav = document.getElementById('nav');
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('navLinks');
+        setTimeout(() => nav.classList.add('visible'), 1500);
+        burger?.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
+    // === REVEAL ===
+    function initReveal() {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    // === INIT ===
+    function init() {
+        resize();
+        initStars();
+        initNetwork();
+        initNav();
+        initReveal();
+        animate();
+        console.log('🚀 Nova - Network with fade endpoints');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+    </script>
+</body>
+</html>
