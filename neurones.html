@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Galaxy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+            color: white;
+            background: #000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+
+        nav.scrolled {
+            background: rgba(5, 5, 15, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 5px;
+        }
+
+        /* Fond galaxie fixe */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .star-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* Container principal */
+        .main-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        /* Sections */
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        /* Hero */
+        .hero h1 {
+            font-size: 80px;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+        }
+
+        .hero p {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+
+        /* Canvas container */
+        .canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .canvas-container.visible {
+            opacity: 1;
+        }
+
+        #speedCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Contenu texte */
+        .content-box {
+            max-width: 800px;
+            padding: 60px;
+            background: transparent;
+            z-index: 5;
+            position: relative;
+        }
+
+        .content-box h2 {
+            font-size: 56px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px #000, 0 0 60px #000, 2px 2px 4px #000;
+        }
+
+        .content-box p {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #000, 0 0 40px #000, 1px 1px 3px #000;
+        }
+
+        /* Section finale */
+        .final-section {
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .experience-btn {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .experience-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.3), transparent);
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple 3s infinite;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 20px; }
+            
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 70%;
+                background: rgba(5, 5, 15, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.3s;
+            }
+
+            .nav-links.active { right: 0; }
+            .burger { display: flex; }
+            .hero h1 { font-size: 40px; }
+            .content-box { padding: 40px 20px; }
+            .content-box h2 { font-size: 36px; }
+            .content-box p { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="nav">
+        <div class="logo">COSMIC</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#s1">Présentation</a></li>
+            <li><a href="#s2">Objectifs</a></li>
+            <li><a href="#s3">Vision</a></li>
+            <li><a href="#s4">Contact</a></li>
+            <li><a href="#s5">Expérience</a></li>
+        </ul>
+        <div class="burger" id="burger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Fond galaxie -->
+    <div class="galaxy-bg">
+        <div class="star-layer" id="layerFar"></div>
+        <div class="star-layer" id="layerMid"></div>
+        <div class="star-layer" id="layerNear"></div>
+    </div>
+
+    <!-- Canvas lignes de vitesse -->
+    <div class="canvas-container" id="canvasContainer">
+        <canvas id="speedCanvas"></canvas>
+    </div>
+
+    <!-- Sections -->
+    <div class="main-container">
+        <section id="home" class="hero">
+            <div>
+                <h1>Voyagez dans l'Espace</h1>
+                <p>Une expérience parallax immersive</p>
+            </div>
+        </section>
+
+        <section id="s1">
+            <div class="content-box">
+                <h2>Présentation</h2>
+                <p>Bienvenue dans un univers où la technologie rencontre l'art cosmique. Notre plateforme explore les frontières de l'expérience utilisateur à travers des interfaces immersives et innovantes.</p>
+                <p>Chaque pixel, chaque animation, chaque transition est pensée pour vous transporter au-delà des limites du web traditionnel.</p>
+            </div>
+        </section>
+
+        <section id="s2">
+            <div class="content-box">
+                <h2>Objectifs</h2>
+                <p>Nous visons à créer des expériences web qui captivent, inspirent et transcendent les attentes. Notre mission est de repousser les limites du possible en combinant design avant-gardiste et technologie de pointe.</p>
+                <p>Innovation, créativité et excellence sont les piliers de notre approche.</p>
+            </div>
+        </section>
+
+        <section id="s3">
+            <div class="content-box">
+                <h2>Vision</h2>
+                <p>Nous imaginons un futur où chaque interaction digitale devient une aventure mémorable. Notre vision est de transformer la façon dont les utilisateurs perçoivent et interagissent avec le web.</p>
+                <p>L'espace infini nous inspire à créer des interfaces sans limites.</p>
+            </div>
+        </section>
+
+        <section id="s4">
+            <div class="content-box">
+                <h2>Contact</h2>
+                <p>Prêt à embarquer pour un voyage cosmique ? Contactez-nous pour donner vie à vos projets les plus ambitieux. Ensemble, créons quelque chose d'extraordinaire.</p>
+                <p>L'aventure ne fait que commencer...</p>
+            </div>
+        </section>
+
+        <section id="s5" class="final-section">
+            <div class="content-box">
+                <h2>Expérience</h2>
+                <p>Prêt pour une nouvelle dimension ? Explorez l'inconnu et repoussez les frontières du possible.</p>
+            </div>
+            <button class="experience-btn">
+                Démarrer
+                <div class="btn-ripple"></div>
+            </button>
+        </section>
+    </div>
+
+    <script>
+        // Génération des étoiles
+        function createStars(container, count, minSize, maxSize, minOp, maxOp) {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = minSize + Math.random() * (maxSize - minSize);
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.opacity = minOp + Math.random() * (maxOp - minOp);
+                container.appendChild(star);
+            }
+        }
+
+        const layerFar = document.getElementById('layerFar');
+        const layerMid = document.getElementById('layerMid');
+        const layerNear = document.getElementById('layerNear');
+        const canvasContainer = document.getElementById('canvasContainer');
+        const canvas = document.getElementById('speedCanvas');
+        const ctx = canvas.getContext('2d');
+        const nav = document.getElementById('nav');
+
+        // Setup canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Réseau neural cosmique (nœuds + connexions)
+        const nodes = [];
+        const nodeCount = 60;
+        const maxConnectionDistance = 150;
+
+        // Créer les nœuds
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push({
+                x: Math.random(),
+                y: Math.random() * 3, // Sur 3x la hauteur (3 sections)
+                baseX: Math.random(),
+                baseY: Math.random() * 3,
+                size: Math.random() * 3 + 2,
+                opacity: Math.random() * 0.5 + 0.5,
+                speed: Math.random() * 0.0005 + 0.0002,
+                angle: Math.random() * Math.PI * 2
+            });
+        }
+
+        createStars(layerFar, 100, 1, 2, 0.3, 0.6);
+        createStars(layerMid, 60, 2, 3, 0.5, 0.8);
+        createStars(layerNear, 40, 2, 4, 0.7, 1);
+
+        // Variables
+        let time = 0;
+        let mouseX = 0;
+        let mouseY = 0;
+        let scrollY = 0;
+        let lastScrollY = 0;
+        const sectionHeight = window.innerHeight;
+
+        // Animation principale
+        function animate() {
+            time += 0.016;
+
+            // FOND - Animation permanente (amplitudes augmentées)
+            let farX = Math.sin(time * 0.05) * 15;
+            let farY = Math.cos(time * 0.05) * 10;
+            
+            let midX = Math.sin(time * 0.07) * 25;
+            let midY = Math.cos(time * 0.07) * 15;
+            
+            let nearX = Math.sin(time * 0.08) * 35;
+            let nearY = Math.cos(time * 0.08) * 20;
+
+            // FOND - Ajouter scroll (vers le haut = négatif)
+            farY -= scrollY * 0.15;
+            midY -= scrollY * 0.3;
+            nearY -= scrollY * 0.5;
+
+            // FOND - Ajouter souris
+            midX += mouseX * 15;
+            midY += mouseY * 15;
+            nearX += mouseX * 30;
+            nearY += mouseY * 30;
+
+            // Appliquer au fond
+            layerFar.style.transform = `translate(${farX}px, ${farY}px)`;
+            layerMid.style.transform = `translate(${midX}px, ${midY}px)`;
+            layerNear.style.transform = `translate(${nearX}px, ${nearY}px)`;
+
+            // RÉSEAU - Visibilité (sections 1, 2, 3 - commence à Présentation)
+            const s1Top = sectionHeight; // Section 1 = Présentation
+            const s4Top = sectionHeight * 4; // Contact = section 4
+            
+            if (scrollY > s1Top && scrollY < s4Top) {
+                canvasContainer.classList.add('visible');
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // RÉSEAU - Animation permanente
+                const networkOscillX = Math.sin(time * 0.03) * 15;
+
+                // RÉSEAU - Souris
+                const networkMouseX = mouseX * 40;
+
+                // RÉSEAU - Scroll (décalage vertical)
+                const scrollInSections = scrollY - s1Top;
+                const heightSections = s4Top - s1Top;
+                const scrollProgress = scrollInSections / heightSections;
+                const networkScrollOffset = scrollProgress * 3; // 0 à 3 (pour 3 sections)
+
+                // Mettre à jour positions des nœuds (mouvement organique)
+                nodes.forEach(node => {
+                    node.angle += node.speed;
+                    node.x = node.baseX + Math.sin(node.angle) * 0.05;
+                    node.y = node.baseY + Math.cos(node.angle) * 0.05;
+                });
+
+                // LIGNE DIRECTRICE UNIQUE (guide de section en section)
+                // 3 nœuds principaux (centre de chaque section)
+                const guidePath = [
+                    { section: 0.5, x: 0.5 }, // Milieu section 1 (Présentation)
+                    { section: 1.5, x: 0.5 }, // Milieu section 2 (Objectifs)
+                    { section: 2.5, x: 0.5 }  // Milieu section 3 (Vision)
+                ];
+
+                ctx.strokeStyle = 'rgba(0, 212, 255, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([10, 5]);
+
+                for (let i = 0; i < guidePath.length - 1; i++) {
+                    const point1 = guidePath[i];
+                    const point2 = guidePath[i + 1];
+
+                    const x1 = point1.x * canvas.width + networkOscillX + networkMouseX;
+                    const y1 = (point1.section - networkScrollOffset) * canvas.height;
+                    const x2 = point2.x * canvas.width + networkOscillX + networkMouseX;
+                    const y2 = (point2.section - networkScrollOffset) * canvas.height;
+
+                    // Dessiner ligne courbe entre sections
+                    const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+                    gradient.addColorStop(0, 'rgba(0, 212, 255, 0.5)');
+                    gradient.addColorStop(0.5, 'rgba(123, 47, 247, 0.6)');
+                    gradient.addColorStop(1, 'rgba(0, 212, 255, 0.5)');
+
+                    ctx.strokeStyle = gradient;
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    
+                    // Courbe de Bézier pour fluidité
+                    const midX = (x1 + x2) / 2;
+                    const midY = (y1 + y2) / 2;
+                    const controlX = midX + Math.sin(time * 0.5 + i) * 50;
+                    const controlY = midY;
+                    
+                    ctx.quadraticCurveTo(controlX, controlY, x2, y2);
+                    ctx.stroke();
+
+                    // Point lumineux au centre de section
+                    ctx.fillStyle = gradient;
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#00d4ff';
+                    ctx.beginPath();
+                    ctx.arc(x1, y1, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+
+                // Dernier point
+                const lastPoint = guidePath[guidePath.length - 1];
+                const lastX = lastPoint.x * canvas.width + networkOscillX + networkMouseX;
+                const lastY = (lastPoint.section - networkScrollOffset) * canvas.height;
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.8)';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#00d4ff';
+                ctx.beginPath();
+                ctx.arc(lastX, lastY, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.setLineDash([]);
+
+                // CONNEXIONS ENTRE NŒUDS (réseau secondaire)
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const node1 = nodes[i];
+                        const node2 = nodes[j];
+
+                        // Position écran des nœuds
+                        const x1 = node1.x * canvas.width + networkOscillX + networkMouseX;
+                        const y1 = (node1.y - networkScrollOffset) * canvas.height;
+                        const x2 = node2.x * canvas.width + networkOscillX + networkMouseX;
+                        const y2 = (node2.y - networkScrollOffset) * canvas.height;
+
+                        // Vérifier si dans l'écran
+                        if (y1 < -100 || y1 > canvas.height + 100 || y2 < -100 || y2 > canvas.height + 100) {
+                            continue;
+                        }
+
+                        // Distance entre nœuds
+                        const dx = x2 - x1;
+                        const dy = y2 - y1;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        // Dessiner connexion si assez proche
+                        if (distance < maxConnectionDistance) {
+                            const opacity = (1 - distance / maxConnectionDistance) * 0.4;
+                            
+                            // Gradient pour effet cosmique
+                            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+                            gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity})`);
+                            gradient.addColorStop(0.5, `rgba(123, 47, 247, ${opacity})`);
+                            gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity})`);
+                            
+                            ctx.strokeStyle = gradient;
+                            ctx.beginPath();
+                            ctx.moveTo(x1, y1);
+                            ctx.lineTo(x2, y2);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Dessiner les nœuds
+                nodes.forEach(node => {
+                    const x = node.x * canvas.width + networkOscillX + networkMouseX;
+                    const y = (node.y - networkScrollOffset) * canvas.height;
+
+                    // Vérifier si dans l'écran
+                    if (y < -50 || y > canvas.height + 50) return;
+
+                    // Nœud avec glow
+                    const gradient = ctx.createRadialGradient(x, y, 0, x, y, node.size * 3);
+                    gradient.addColorStop(0, `rgba(0, 212, 255, ${node.opacity})`);
+                    gradient.addColorStop(0.5, `rgba(123, 47, 247, ${node.opacity * 0.5})`);
+                    gradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(x, y, node.size * 3, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Point central lumineux
+                    ctx.fillStyle = `rgba(255, 255, 255, ${node.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, node.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+            } else {
+                canvasContainer.classList.remove('visible');
+            }
+
+            lastScrollY = scrollY;
+
+            requestAnimationFrame(animate);
+        }
+
+        // Listeners
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) - 0.5;
+            mouseY = (e.clientY / window.innerHeight) - 0.5;
+        });
+
+        document.querySelector('.main-container').addEventListener('scroll', (e) => {
+            scrollY = e.target.scrollTop;
+            nav.classList.toggle('scrolled', scrollY > 100);
+        });
+
+        // Menu burger
+        document.getElementById('burger').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // Démarrer l'animation
+        animate();
+        
+        console.log('Stars:', layerFar.children.length, layerMid.children.length, layerNear.children.length);
+        console.log('Canvas ready');
+    </script>
+</body>
+</html>
