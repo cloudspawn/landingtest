@@ -5,3 +5,4 @@ test rapid paralax galaxy
 - https://cloudspawn.github.io/landingtest/neurones.html
 - https://cloudspawn.github.io/landingtest/parallax-galaxy-v2.html
 - https://cloudspawn.github.io/landingtest/parallax-galaxy-v3.html
+- https://cloudspawn.github.io/landingtest/parallax-galaxy-vf.html
