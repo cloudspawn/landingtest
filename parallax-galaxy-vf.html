@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Galaxy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00d4ff;
+            --purple: #7b2ff7;
+            --pink: #f72fb0;
+            --dark: #050510;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            color: white;
+            background: var(--dark);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: background 0.3s, transform 0.5s;
+            transform: translateY(-100%);
+        }
+
+        nav.visible {
+            transform: translateY(0);
+        }
+
+        nav.scrolled {
+            background: rgba(5, 5, 15, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--text-secondary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+        }
+
+        .burger div {
+            width: 28px;
+            height: 2px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        /* Fond galaxie */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.35;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(123, 47, 247, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(ellipse at 60% 60%, rgba(247, 47, 176, 0.06) 0%, transparent 45%);
+        }
+
+        .star-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .star.twinkle {
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Container principal */
+        .main-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        /* Sections */
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        /* Hero */
+        .hero {
+            flex-direction: column;
+            gap: 30px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(48px, 10vw, 110px);
+            font-weight: 600;
+            line-height: 1.1;
+            color: var(--text-primary);
+            opacity: 0;
+            transform: translateY(50px);
+            animation: heroReveal 1.2s ease-out 0.5s forwards;
+        }
+
+        .hero h1 .line2 {
+            display: block;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        @keyframes heroReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(12px, 1.5vw, 16px);
+            color: var(--text-muted);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 30px;
+            opacity: 0;
+            animation: fadeUp 1s ease-out 1s forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeUp 1s ease-out 1.5s forwards;
+        }
+
+        .scroll-indicator span {
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--text-muted), transparent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: var(--text-secondary);
+            animation: scrollDown 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollDown {
+            0% { top: -20px; opacity: 0; }
+            30% { opacity: 1; }
+            100% { top: 60px; opacity: 0; }
+        }
+
+        /* Hero particles */
+        .hero-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .hero-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            50% {
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        /* Canvas container */
+        .canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .canvas-container.visible {
+            opacity: 1;
+        }
+
+        #speedCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Contenu texte */
+        .content-box {
+            max-width: 800px;
+            padding: 60px;
+            z-index: 5;
+            position: relative;
+        }
+
+        .content-box h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(42px, 6vw, 72px);
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-box p {
+            font-size: clamp(15px, 1.8vw, 18px);
+            font-weight: 300;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-box.visible h2 {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .content-box.visible p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-box.visible p:nth-child(2) { transition-delay: 0.2s; }
+        .content-box.visible p:nth-child(3) { transition-delay: 0.4s; }
+
+        /* Section finale */
+        .final-section {
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        .final-section .content-box {
+            text-align: center;
+        }
+
+        /* Invitation container */
+        .invitation-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .experience-btn {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .experience-btn.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .experience-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%) scale(1);
+            animation: ripple 3s ease-out infinite;
+        }
+
+        .btn-ripple:nth-child(2) { animation-delay: 1s; }
+        .btn-ripple:nth-child(3) { animation-delay: 2s; }
+
+        @keyframes ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 20px; }
+            
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 0;
+                height: 100vh;
+                width: 70%;
+                background: rgba(5, 5, 15, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.3s;
+            }
+
+            .nav-links.active { right: 0; }
+            .burger { display: flex; }
+            .content-box { padding: 40px 20px; }
+            
+            .experience-btn {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="nav">
+        <div class="logo">COSMIC</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#s1">Présentation</a></li>
+            <li><a href="#s2">Objectifs</a></li>
+            <li><a href="#s3">Vision</a></li>
+            <li><a href="#s4">Contact</a></li>
+            <li><a href="#s5">Expérience</a></li>
+        </ul>
+        <div class="burger" id="burger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Fond galaxie -->
+    <div class="galaxy-bg">
+        <div class="nebula"></div>
+        <div class="star-layer" id="layerFar"></div>
+        <div class="star-layer" id="layerMid"></div>
+        <div class="star-layer" id="layerNear"></div>
+    </div>
+
+    <!-- Canvas réseau neural -->
+    <div class="canvas-container" id="canvasContainer">
+        <canvas id="speedCanvas"></canvas>
+    </div>
+
+    <!-- Sections -->
+    <div class="main-container" id="mainContainer">
+        <section id="home" class="hero">
+            <div class="hero-particles" id="heroParticles"></div>
+            <div class="hero-content">
+                <h1>
+                    <span class="line1">Voyagez dans</span>
+                    <span class="line2">l'Espace</span>
+                </h1>
+                <p class="hero-subtitle">Une expérience parallax immersive</p>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <section id="s1">
+            <div class="content-box" data-reveal>
+                <h2>Présentation</h2>
+                <p>Bienvenue dans un univers où la technologie rencontre l'art cosmique. Notre plateforme explore les frontières de l'expérience utilisateur à travers des interfaces immersives et innovantes.</p>
+                <p>Chaque pixel, chaque animation, chaque transition est pensée pour vous transporter au-delà des limites du web traditionnel.</p>
+            </div>
+        </section>
+
+        <section id="s2">
+            <div class="content-box" data-reveal>
+                <h2>Objectifs</h2>
+                <p>Nous visons à créer des expériences web qui captivent, inspirent et transcendent les attentes. Notre mission est de repousser les limites du possible en combinant design avant-gardiste et technologie de pointe.</p>
+                <p>Innovation, créativité et excellence sont les piliers de notre approche.</p>
+            </div>
+        </section>
+
+        <section id="s3">
+            <div class="content-box" data-reveal>
+                <h2>Vision</h2>
+                <p>Nous imaginons un futur où chaque interaction digitale devient une aventure mémorable. Notre vision est de transformer la façon dont les utilisateurs perçoivent et interagissent avec le web.</p>
+                <p>L'espace infini nous inspire à créer des interfaces sans limites.</p>
+            </div>
+        </section>
+
+        <section id="s4">
+            <div class="content-box" data-reveal>
+                <h2>Contact</h2>
+                <p>Prêt à embarquer pour un voyage cosmique ? Contactez-nous pour donner vie à vos projets les plus ambitieux. Ensemble, créons quelque chose d'extraordinaire.</p>
+                <p>L'aventure ne fait que commencer...</p>
+            </div>
+        </section>
+
+        <section id="s5" class="final-section">
+            <div class="content-box" data-reveal>
+                <h2>Prêt pour une nouvelle dimension ?</h2>
+                <p>Explorez l'inconnu et repoussez les frontières du possible.</p>
+            </div>
+            <div class="invitation-container">
+                <button class="experience-btn" id="experienceBtn">
+                    <span class="btn-text">Démarrer</span>
+                    <div class="btn-ripple"></div>
+                    <div class="btn-ripple"></div>
+                    <div class="btn-ripple"></div>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const CONFIG = {
+            stars: {
+                far: { count: 120, minSize: 1, maxSize: 2, minOp: 0.2, maxOp: 0.5 },
+                mid: { count: 80, minSize: 1.5, maxSize: 3, minOp: 0.4, maxOp: 0.7 },
+                near: { count: 50, minSize: 2, maxSize: 4, minOp: 0.6, maxOp: 1 }
+            },
+            heroParticles: 12
+        };
+
+        // ===== ELEMENTS =====
+        const layerFar = document.getElementById('layerFar');
+        const layerMid = document.getElementById('layerMid');
+        const layerNear = document.getElementById('layerNear');
+        const canvasContainer = document.getElementById('canvasContainer');
+        const canvas = document.getElementById('speedCanvas');
+        const ctx = canvas.getContext('2d');
+        const nav = document.getElementById('nav');
+        const mainContainer = document.getElementById('mainContainer');
+        const heroParticlesContainer = document.getElementById('heroParticles');
+        const experienceBtn = document.getElementById('experienceBtn');
+
+        // ===== SETUP CANVAS =====
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // ===== GÉNÉRATION DES ÉTOILES =====
+        function createStars(container, config) {
+            const { count, minSize, maxSize, minOp, maxOp } = config;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star' + (Math.random() > 0.75 ? ' twinkle' : '');
+                const size = minSize + Math.random() * (maxSize - minSize);
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.opacity = minOp + Math.random() * (maxOp - minOp);
+                if (star.classList.contains('twinkle')) {
+                    star.style.animationDelay = Math.random() * 3 + 's';
+                }
+                container.appendChild(star);
+            }
+        }
+
+        createStars(layerFar, CONFIG.stars.far);
+        createStars(layerMid, CONFIG.stars.mid);
+        createStars(layerNear, CONFIG.stars.near);
+
+        // ===== HERO PARTICLES =====
+        function createHeroParticles() {
+            for (let i = 0; i < CONFIG.heroParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'hero-particle';
+                const size = 3 + Math.random() * 6;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = 10 + Math.random() * 80 + '%';
+                particle.style.top = 20 + Math.random() * 60 + '%';
+                particle.style.background = `radial-gradient(circle, rgba(255,255,255,0.6), transparent)`;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = 6 + Math.random() * 4 + 's';
+                heroParticlesContainer.appendChild(particle);
+            }
+        }
+        createHeroParticles();
+
+        // ===== CHEMIN PRINCIPAL =====
+        const mainNodes = [
+            { section: 0.5, x: 0.38 },   // Présentation
+            { section: 1.5, x: 0.32 },   // Objectifs
+            { section: 2.5, x: 0.55 },   // Vision
+            { section: 3.5, x: 0.45 }    // Contact
+        ];
+
+        // Nœuds intermédiaires
+        const intermediateNodes = [];
+        for (let i = 0; i < mainNodes.length - 1; i++) {
+            const current = mainNodes[i];
+            const next = mainNodes[i + 1];
+            
+            const numIntermediate = 1 + Math.floor(Math.random() * 2);
+            for (let j = 1; j <= numIntermediate; j++) {
+                const t = j / (numIntermediate + 1);
+                const midX = current.x + (next.x - current.x) * t;
+                const midY = current.section + (next.section - current.section) * t;
+                intermediateNodes.push({
+                    section: midY,
+                    x: midX + (Math.random() - 0.5) * 0.08
+                });
+            }
+        }
+
+        // Branches discrètes du chemin principal
+        const branchNodes = [];
+        mainNodes.forEach((main, idx) => {
+            const branchCount = 2 + Math.floor(Math.random() * 2);
+            for (let i = 0; i < branchCount; i++) {
+                const baseAngle = Math.random() * Math.PI * 2;
+                const distance = 0.05 + Math.random() * 0.06;
+                const branchX = main.x + Math.cos(baseAngle) * distance;
+                const branchY = main.section + Math.sin(baseAngle) * 0.1;
+                
+                branchNodes.push({
+                    parentIdx: idx,
+                    x: Math.max(0.15, Math.min(0.85, branchX)),
+                    y: branchY,
+                    baseX: Math.max(0.15, Math.min(0.85, branchX)),
+                    baseY: branchY,
+                    size: 2 + Math.random() * 1,
+                    opacity: 0.2 + Math.random() * 0.15,
+                    angle: Math.random() * Math.PI * 2,
+                    speed: 0.0002 + Math.random() * 0.0002
+                });
+            }
+        });
+
+        // ===== CONSTELLATIONS PAR SECTION (avec connexions) =====
+        const constellationGroups = [];
+        
+        for (let sectionIdx = 0; sectionIdx < 4; sectionIdx++) {
+            const sectionY = 0.5 + sectionIdx;
+            
+            // 3-4 groupes par section
+            const groupCount = 3 + Math.floor(Math.random() * 2);
+            
+            for (let g = 0; g < groupCount; g++) {
+                // Position du groupe sur les côtés
+                let groupX;
+                if (Math.random() > 0.5) {
+                    groupX = 0.72 + Math.random() * 0.2;
+                } else {
+                    groupX = 0.08 + Math.random() * 0.18;
+                }
+                
+                const groupY = sectionY + (Math.random() - 0.5) * 0.7;
+                
+                const group = {
+                    nodes: [],
+                    centerX: groupX,
+                    centerY: groupY
+                };
+                
+                // 3-5 nœuds par groupe
+                const nodeCount = 3 + Math.floor(Math.random() * 3);
+                
+                for (let n = 0; n < nodeCount; n++) {
+                    group.nodes.push({
+                        x: groupX + (Math.random() - 0.5) * 0.12,
+                        y: groupY + (Math.random() - 0.5) * 0.25,
+                        size: 2 + Math.random() * 2.5,
+                        opacity: 0.3 + Math.random() * 0.3,
+                        twinkleSpeed: 0.4 + Math.random() * 1,
+                        twinkleOffset: Math.random() * Math.PI * 2
+                    });
+                }
+                
+                constellationGroups.push(group);
+            }
+        }
+
+        // ===== VARIABLES GLOBALES =====
+        let time = 0;
+        let mouseX = 0;
+        let mouseY = 0;
+        let scrollY = 0;
+        const sectionHeight = window.innerHeight;
+
+        // ===== FONCTION DE COURBE TREMBLANTE =====
+        function drawTremblingCurve(x1, y1, x2, y2, opacity = 0.15) {
+            const segments = 12;
+            const points = [];
+            
+            for (let i = 0; i <= segments; i++) {
+                const t = i / segments;
+                const baseX = x1 + (x2 - x1) * t;
+                const baseY = y1 + (y2 - y1) * t;
+                
+                const trembleX = Math.sin(time * 3 + t * 8) * 2 + 
+                                 Math.sin(time * 5 + t * 12) * 1;
+                const trembleY = Math.cos(time * 2.5 + t * 6) * 1.5 + 
+                                 Math.cos(time * 4 + t * 10) * 0.8;
+                
+                const edgeFactor = Math.sin(t * Math.PI);
+                
+                points.push({
+                    x: baseX + trembleX * edgeFactor,
+                    y: baseY + trembleY * edgeFactor
+                });
+            }
+            
+            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            
+            for (let i = 1; i < points.length - 1; i++) {
+                const xc = (points[i].x + points[i + 1].x) / 2;
+                const yc = (points[i].y + points[i + 1].y) / 2;
+                ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+            }
+            
+            ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+            ctx.stroke();
+        }
+
+        // ===== ANIMATION PRINCIPALE =====
+        function animate() {
+            time += 0.016;
+
+            // FOND - Animation
+            let farX = Math.sin(time * 0.05) * 15;
+            let farY = Math.cos(time * 0.05) * 10;
+            
+            let midX = Math.sin(time * 0.07) * 25;
+            let midY = Math.cos(time * 0.07) * 15;
+            
+            let nearX = Math.sin(time * 0.08) * 35;
+            let nearY = Math.cos(time * 0.08) * 20;
+
+            farY -= scrollY * 0.15;
+            midY -= scrollY * 0.3;
+            nearY -= scrollY * 0.5;
+
+            midX += mouseX * 15;
+            midY += mouseY * 15;
+            nearX += mouseX * 30;
+            nearY += mouseY * 30;
+
+            layerFar.style.transform = `translate(${farX}px, ${farY}px)`;
+            layerMid.style.transform = `translate(${midX}px, ${midY}px)`;
+            layerNear.style.transform = `translate(${nearX}px, ${nearY}px)`;
+
+            // RÉSEAU
+            const s1Top = sectionHeight;
+            const networkEndPoint = sectionHeight * 4.8;
+            
+            if (scrollY > s1Top * 0.5 && scrollY < networkEndPoint) {
+                canvasContainer.classList.add('visible');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const networkOscillX = Math.sin(time * 0.03) * 8;
+                const networkMouseX = mouseX * 25;
+
+                const scrollInSections = scrollY - s1Top;
+                const heightSections = networkEndPoint - s1Top;
+                const scrollProgress = Math.min(scrollInSections / heightSections, 1);
+                const networkScrollOffset = scrollProgress * 4.5;
+
+                // Animation des branches
+                branchNodes.forEach(node => {
+                    node.angle += node.speed;
+                    node.x = node.baseX + Math.sin(node.angle) * 0.01;
+                    node.y = node.baseY + Math.cos(node.angle) * 0.015;
+                });
+
+                // ===== CONSTELLATIONS DE FOND (avec connexions visibles) =====
+                constellationGroups.forEach((group, gIdx) => {
+                    const visibleNodes = [];
+                    
+                    // D'abord collecter les nœuds visibles et leurs positions écran
+                    group.nodes.forEach((node, nIdx) => {
+                        const x = node.x * canvas.width + networkOscillX * 0.3;
+                        const y = (node.y - networkScrollOffset) * canvas.height;
+                        
+                        if (y >= -50 && y <= canvas.height + 50) {
+                            const twinkle = 0.5 + Math.sin(time * node.twinkleSpeed + node.twinkleOffset) * 0.5;
+                            visibleNodes.push({
+                                x, y,
+                                size: node.size,
+                                opacity: node.opacity * twinkle
+                            });
+                        }
+                    });
+                    
+                    // Dessiner les connexions entre nœuds du groupe
+                    if (visibleNodes.length > 1) {
+                        for (let i = 0; i < visibleNodes.length; i++) {
+                            for (let j = i + 1; j < visibleNodes.length; j++) {
+                                const n1 = visibleNodes[i];
+                                const n2 = visibleNodes[j];
+                                
+                                const dx = n2.x - n1.x;
+                                const dy = n2.y - n1.y;
+                                const dist = Math.sqrt(dx * dx + dy * dy);
+                                
+                                // Connecter si assez proche
+                                if (dist < 120) {
+                                    const lineOpacity = Math.min(n1.opacity, n2.opacity) * 0.4 * (1 - dist / 120);
+                                    
+                                    // Léger tremblement
+                                    const trembleX = Math.sin(time * 2 + gIdx) * 1;
+                                    const trembleY = Math.cos(time * 2.5 + gIdx) * 1;
+                                    
+                                    ctx.strokeStyle = `rgba(255, 255, 255, ${lineOpacity})`;
+                                    ctx.lineWidth = 0.5;
+                                    ctx.beginPath();
+                                    ctx.moveTo(n1.x, n1.y);
+                                    
+                                    const midX = (n1.x + n2.x) / 2 + trembleX;
+                                    const midY = (n1.y + n2.y) / 2 + trembleY;
+                                    ctx.quadraticCurveTo(midX, midY, n2.x, n2.y);
+                                    ctx.stroke();
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Dessiner les nœuds
+                    visibleNodes.forEach(node => {
+                        // Halo
+                        const glowGradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.size * 4);
+                        glowGradient.addColorStop(0, `rgba(0, 212, 255, ${node.opacity * 0.3})`);
+                        glowGradient.addColorStop(0.5, `rgba(123, 47, 247, ${node.opacity * 0.15})`);
+                        glowGradient.addColorStop(1, 'transparent');
+                        
+                        ctx.fillStyle = glowGradient;
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, node.size * 4, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Point central
+                        ctx.fillStyle = `rgba(255, 255, 255, ${node.opacity})`;
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                });
+
+                // ===== FILAMENTS PRINCIPAUX =====
+                for (let i = 0; i < mainNodes.length - 1; i++) {
+                    const node1 = mainNodes[i];
+                    const node2 = mainNodes[i + 1];
+
+                    const x1 = node1.x * canvas.width + networkOscillX + networkMouseX;
+                    const y1 = (node1.section - networkScrollOffset) * canvas.height;
+                    const x2 = node2.x * canvas.width + networkOscillX + networkMouseX;
+                    const y2 = (node2.section - networkScrollOffset) * canvas.height;
+
+                    drawTremblingCurve(x1, y1, x2, y2, 0.18);
+                }
+
+                // Nœuds intermédiaires
+                intermediateNodes.forEach((node, idx) => {
+                    const x = node.x * canvas.width + networkOscillX + networkMouseX;
+                    const y = (node.section - networkScrollOffset) * canvas.height;
+
+                    if (y < -50 || y > canvas.height + 50) return;
+
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Nœuds principaux
+                mainNodes.forEach((node, idx) => {
+                    const x = node.x * canvas.width + networkOscillX + networkMouseX;
+                    const y = (node.section - networkScrollOffset) * canvas.height;
+
+                    if (y < -100 || y > canvas.height + 100) return;
+
+                    // Glow subtil
+                    const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, 20);
+                    glowGradient.addColorStop(0, 'rgba(0, 212, 255, 0.15)');
+                    glowGradient.addColorStop(0.6, 'rgba(123, 47, 247, 0.05)');
+                    glowGradient.addColorStop(1, 'transparent');
+
+                    ctx.fillStyle = glowGradient;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 20, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Point central
+                    const pulse = Math.sin(time * 1.5 + idx) * 1;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3 + pulse, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // ===== FILAMENT FINAL vers le point pointeur =====
+                const lastMain = mainNodes[mainNodes.length - 1];
+                const lastX = lastMain.x * canvas.width + networkOscillX + networkMouseX;
+                const lastY = (lastMain.section - networkScrollOffset) * canvas.height;
+                
+                // Point final au milieu entre le texte et le bouton (environ section 4.25)
+                const finalPointY = (4.25 - networkScrollOffset) * canvas.height;
+                const finalPointX = 0.5 * canvas.width + networkOscillX + networkMouseX;
+
+                // Dessiner le filament vers le point final
+                if (lastY > -100 && lastY < canvas.height + 200) {
+                    drawTremblingCurve(lastX, lastY, finalPointX, finalPointY, 0.15);
+                }
+
+                // Point final (pointeur vers le bouton)
+                if (finalPointY > -50 && finalPointY < canvas.height + 100) {
+                    const pulseSize = 5 + Math.sin(time * 2) * 2;
+                    
+                    // Halo
+                    const haloGradient = ctx.createRadialGradient(finalPointX, finalPointY, 0, finalPointX, finalPointY, 35);
+                    haloGradient.addColorStop(0, 'rgba(0, 212, 255, 0.25)');
+                    haloGradient.addColorStop(0.5, 'rgba(123, 47, 247, 0.1)');
+                    haloGradient.addColorStop(1, 'transparent');
+                    
+                    ctx.fillStyle = haloGradient;
+                    ctx.beginPath();
+                    ctx.arc(finalPointX, finalPointY, 35, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Point central
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                    ctx.beginPath();
+                    ctx.arc(finalPointX, finalPointY, pulseSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // ===== BRANCHES =====
+                branchNodes.forEach((branch, idx) => {
+                    const parent = mainNodes[branch.parentIdx];
+                    
+                    const px = parent.x * canvas.width + networkOscillX + networkMouseX;
+                    const py = (parent.section - networkScrollOffset) * canvas.height;
+                    const bx = branch.x * canvas.width + networkOscillX + networkMouseX;
+                    const by = (branch.y - networkScrollOffset) * canvas.height;
+
+                    if (py < -150 || py > canvas.height + 150) return;
+
+                    // Ligne tremblante
+                    ctx.strokeStyle = `rgba(255, 255, 255, 0.08)`;
+                    ctx.lineWidth = 0.5;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    
+                    const tremble = Math.sin(time * 2 + idx) * 3;
+                    const controlX = (px + bx) / 2 + tremble;
+                    const controlY = (py + by) / 2;
+                    ctx.quadraticCurveTo(controlX, controlY, bx, by);
+                    ctx.stroke();
+
+                    // Nœud
+                    ctx.fillStyle = `rgba(255, 255, 255, ${branch.opacity * 0.5})`;
+                    ctx.beginPath();
+                    ctx.arc(bx, by, branch.size * 0.8, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+            } else {
+                canvasContainer.classList.remove('visible');
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // ===== RÉVÉLATION AU SCROLL =====
+        function checkReveal() {
+            const contentBoxes = document.querySelectorAll('[data-reveal]');
+            
+            contentBoxes.forEach(box => {
+                const rect = box.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                if (rect.top < windowHeight * 0.75 && rect.bottom > 0) {
+                    box.classList.add('visible');
+                }
+            });
+
+            const s5 = document.getElementById('s5');
+            const s5Rect = s5.getBoundingClientRect();
+            
+            if (s5Rect.top < window.innerHeight * 0.6) {
+                experienceBtn.classList.add('visible');
+            }
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) - 0.5;
+            mouseY = (e.clientY / window.innerHeight) - 0.5;
+        });
+
+        mainContainer.addEventListener('scroll', (e) => {
+            scrollY = e.target.scrollTop;
+            nav.classList.toggle('scrolled', scrollY > 100);
+            checkReveal();
+        });
+
+        setTimeout(() => {
+            nav.classList.add('visible');
+        }, 1800);
+
+        document.getElementById('burger').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        experienceBtn.addEventListener('click', () => {
+            console.log('Expérience démarrée !');
+        });
+
+        // ===== INITIALISATION =====
+        animate();
+        checkReveal();
+        
+        console.log('🌌 Parallax Galaxy v9 - Connected constellations');
+    </script>
+</body>
+</html>
