@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulting tech pour accélérer votre transformation digitale.">
+    <title>NOVA — Consulting Tech</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+:root {
+    --cyan: #00d4ff;
+    --cyan-soft: rgba(0, 212, 255, 0.7);
+    --cyan-dim: rgba(0, 212, 255, 0.4);
+    --purple: #7b2ff7;
+    --dark: #050510;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-muted: rgba(255, 255, 255, 0.35);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --font-main: 'Space Grotesk', system-ui, sans-serif;
+    --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-main);
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html { scroll-behavior: auto; }
+}
+
+/* NAV */
+.nav {
+    position: fixed; top: 0; width: 100%; padding: 1.25rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000; transition: background 0.3s, transform 0.5s var(--transition-smooth);
+    transform: translateY(-100%);
+}
+.nav.visible { transform: translateY(0); }
+.nav.scrolled { background: rgba(5, 5, 15, 0.95); backdrop-filter: blur(10px); }
+.nav__logo { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
+.nav__links { display: flex; gap: 2rem; list-style: none; }
+.nav__link { color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; font-weight: 500; }
+.nav__link:hover { color: var(--text-primary); }
+
+/* === BOUTONS ANGULAIRES === */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.8rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s var(--transition-smooth);
+    font-family: var(--font-main);
+    border: 1px solid;
+}
+
+.btn--primary {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--dark);
+}
+
+.btn--primary:hover {
+    background: white;
+    border-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+}
+
+.btn--outline {
+    background: transparent;
+    border-color: var(--cyan-dim);
+    color: var(--text-primary);
+}
+
+.btn--outline:hover {
+    background: rgba(0, 212, 255, 0.08);
+    border-color: var(--cyan-soft);
+}
+
+.btn--large {
+    padding: 1.1rem 2.5rem;
+    font-size: 0.85rem;
+}
+
+.nav__cta {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.7rem;
+}
+
+/* PARALLAX CONTAINER */
+.parallax-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+    background: radial-gradient(ellipse at center, #0a0a18 0%, var(--dark) 70%);
+}
+.nebula {
+    position: absolute; inset: 0; opacity: 0.3;
+    background: 
+        radial-gradient(ellipse at 20% 80%, rgba(123, 47, 247, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 45%);
+}
+
+/* CANVAS LAYERS */
+.layer-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+}
+.layer-stars { z-index: -1; }
+.layer-network { z-index: 0; }
+
+/* SECTIONS */
+.section {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 6rem 2rem; position: relative;
+}
+.section--hero { padding-top: 0; }
+
+/* HERO */
+.hero { text-align: center; max-width: 850px; position: relative; z-index: 2; }
+.hero__title {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    opacity: 0; transform: translateY(40px);
+    animation: fadeUp 1s var(--transition-smooth) 0.3s forwards;
+}
+
+/* === TEXTE ACCENT - SIMPLE COULEUR === */
+.text-accent {
+    color: var(--cyan-soft);
+}
+
+.hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 400;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 0.6s forwards;
+}
+
+.hero__cta {
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 0.9s forwards;
+}
+
+.hero__scroll {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 1.2s forwards;
+}
+.hero__scroll-text { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+.hero__scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--text-muted), transparent); position: relative; overflow: hidden; }
+.hero__scroll-line::after { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: var(--cyan); animation: scrollLine 2s ease-in-out infinite; }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes scrollLine { 0% { top: -15px; opacity: 0; } 30% { opacity: 1; } 100% { top: 40px; opacity: 0; } }
+
+/* === SERVICES - LAYOUT FLUIDE SANS CADRES === */
+.services { 
+    max-width: 1000px; 
+    width: 100%; 
+    position: relative; 
+    z-index: 2; 
+}
+
+.services__header { 
+    text-align: center; 
+    margin-bottom: 5rem; 
+}
+
+.services__label { 
+    font-size: 0.7rem; 
+    letter-spacing: 0.3em; 
+    text-transform: uppercase; 
+    color: var(--cyan); 
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.services__title { 
+    font-size: clamp(1.75rem, 4vw, 2.5rem); 
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
+
+/* Liste de services fluide */
+.services__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.service-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    padding: 0 1rem;
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.service-item:hover .service-item__title {
+    color: var(--text-primary);
+}
+
+.service-item:hover .service-item__number {
+    color: var(--cyan);
+}
+
+.service-item__number {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    padding-top: 0.5rem;
+    transition: color 0.3s;
+}
+
+.service-item__content {
+    max-width: 500px;
+}
+
+.service-item__title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+}
+
+.service-item__text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+.service-item__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    justify-content: flex-end;
+}
+
+.service-item__tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Ligne de séparation subtile */
+.service-item:not(:last-child)::after {
+    content: '';
+    grid-column: 1 / -1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-subtle) 20%, var(--border-subtle) 80%, transparent);
+    margin-top: 4rem;
+}
+
+/* === MARQUEE CLIENTS === */
+.proof { 
+    max-width: 100%; 
+    width: 100%; 
+    position: relative; 
+    z-index: 2; 
+    overflow: hidden; 
+}
+
+.marquee-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 5rem;
+}
+
+.marquee-container::before,
+.marquee-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.marquee-container::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--dark) 0%, transparent 100%);
+}
+
+.marquee-container::after {
+    right: 0;
+    background: linear-gradient(90deg, transparent 0%, var(--dark) 100%);
+}
+
+.marquee {
+    display: flex;
+    gap: 4rem;
+    animation: marquee 30s linear infinite;
+}
+
+.marquee:hover { animation-play-state: paused; }
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.marquee__item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    transition: color 0.3s;
+    white-space: nowrap;
+}
+
+.marquee__item:hover { color: var(--text-secondary); }
+
+.marquee__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0.4;
+}
+
+.proof__testimonial {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.proof__quote {
+    font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.proof__quote::before { content: '"'; }
+.proof__quote::after { content: '"'; }
+
+.proof__author { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 1rem; 
+}
+
+.proof__avatar {
+    width: 36px; 
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    position: relative;
+    overflow: hidden;
+}
+
+.proof__avatar::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--dark);
+}
+
+.proof__author-info { text-align: left; }
+.proof__author-name { font-weight: 500; font-size: 0.85rem; }
+.proof__author-role { font-size: 0.7rem; color: var(--text-muted); }
+
+/* CTA SECTION */
+.cta-section { 
+    text-align: center; 
+    max-width: 550px; 
+    position: relative; 
+    z-index: 2; 
+}
+
+.cta-section__title { 
+    font-size: clamp(1.75rem, 4vw, 2.5rem); 
+    font-weight: 500; 
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.cta-section__text { 
+    color: var(--text-secondary); 
+    font-size: 0.95rem; 
+    margin-bottom: 2.5rem;
+}
+
+/* FOOTER */
+.footer { 
+    padding: 2.5rem 2rem; 
+    text-align: center; 
+    border-top: 1px solid var(--border-subtle); 
+}
+.footer__text { 
+    font-size: 0.7rem; 
+    color: var(--text-muted); 
+    letter-spacing: 0.05em; 
+}
+
+/* REVEAL */
+.reveal { 
+    opacity: 0; 
+    transform: translateY(30px); 
+    transition: all 0.8s var(--transition-smooth); 
+}
+.reveal.visible { 
+    opacity: 1; 
+    transform: translateY(0); 
+}
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .nav { padding: 1rem 1.5rem; }
+    .nav__links { 
+        position: fixed; right: -100%; top: 0; height: 100vh; width: 70%; 
+        background: rgba(5,5,15,0.98); flex-direction: column; 
+        align-items: center; justify-content: center; gap: 2rem; 
+        transition: right 0.3s; 
+    }
+    .nav__links.active { right: 0; }
+    .nav__burger { display: flex; }
+    .nav__cta { display: none; }
+    
+    .service-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: left;
+    }
+    
+    .service-item__number {
+        padding-top: 0;
+    }
+    
+    .service-item__tags {
+        justify-content: flex-start;
+        padding-top: 1rem;
+    }
+    
+    .service-item:not(:last-child)::after {
+        margin-top: 3rem;
+    }
+    
+    .btn--large { 
+        padding: 1rem 2rem; 
+    }
+    
+    .section { 
+        padding: 4rem 1.5rem; 
+    }
+    
+    .marquee { 
+        gap: 2.5rem; 
+    }
+}
+
+.nav__burger { 
+    display: none; 
+    flex-direction: column; 
+    cursor: pointer; 
+    gap: 6px; 
+}
+.nav__burger span { 
+    width: 28px; 
+    height: 2px; 
+    background: white; 
+}
+
+@media (max-width: 768px) {
+    .nav__burger { display: flex; }
+}
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nav" id="nav">
+        <a href="#hero" class="nav__logo">NOVA</a>
+        <ul class="nav__links" id="navLinks">
+            <li><a href="#hero" class="nav__link">Accueil</a></li>
+            <li><a href="#services" class="nav__link">Services</a></li>
+            <li><a href="#clients" class="nav__link">Clients</a></li>
+            <li><a href="#contact" class="nav__link">Contact</a></li>
+        </ul>
+        <a href="#contact" class="btn btn--outline nav__cta">Parlons-en</a>
+        <div class="nav__burger" id="burger"><span></span><span></span><span></span></div>
+    </nav>
+
+    <!-- BACKGROUND -->
+    <div class="parallax-bg"><div class="nebula"></div></div>
+    
+    <!-- STARS LAYER -->
+    <canvas class="layer-canvas layer-stars" id="starsCanvas"></canvas>
+    
+    <!-- NETWORK LAYER -->
+    <canvas class="layer-canvas layer-network" id="networkCanvas"></canvas>
+
+    <!-- HERO -->
+    <section class="section section--hero" id="hero">
+        <div class="hero">
+            <h1 class="hero__title">Accélérez votre<br><span class="text-accent">transformation digitale</span></h1>
+            <p class="hero__subtitle">Conseil stratégique et expertise technique pour les entreprises qui veulent construire le futur, pas le subir.</p>
+            <a href="#contact" class="btn btn--primary hero__cta">
+                Démarrer un projet 
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="hero__scroll"><span class="hero__scroll-text">Scroll</span><div class="hero__scroll-line"></div></div>
+    </section>
+
+    <!-- SERVICES - LAYOUT FLUIDE -->
+    <section class="section" id="services">
+        <div class="services">
+            <header class="services__header reveal">
+                <p class="services__label">Ce que nous faisons</p>
+                <h2 class="services__title">Expertise technique, vision stratégique</h2>
+            </header>
+            
+            <div class="services__list">
+                <article class="service-item reveal reveal-delay-1">
+                    <span class="service-item__number">01</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Stratégie Tech</h3>
+                        <p class="service-item__text">Audit complet de votre infrastructure, définition de la roadmap technologique et choix d'architecture alignés sur vos objectifs business.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Audit</span>
+                        <span class="service-item__tag">Roadmap</span>
+                        <span class="service-item__tag">Architecture</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-2">
+                    <span class="service-item__number">02</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Développement</h3>
+                        <p class="service-item__text">Applications web et mobile, APIs robustes et microservices scalables. Code maintenable, testé, documenté.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">React</span>
+                        <span class="service-item__tag">Node.js</span>
+                        <span class="service-item__tag">TypeScript</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-3">
+                    <span class="service-item__number">03</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Cloud & DevOps</h3>
+                        <p class="service-item__text">Migration cloud, pipelines CI/CD, infrastructure as code. Optimisation des coûts et de la performance.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">AWS</span>
+                        <span class="service-item__tag">Terraform</span>
+                        <span class="service-item__tag">Kubernetes</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-4">
+                    <span class="service-item__number">04</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Accompagnement</h3>
+                        <p class="service-item__text">Montée en compétences de vos équipes, transfert de connaissances et accompagnement dans la durée.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Formation</span>
+                        <span class="service-item__tag">Coaching</span>
+                        <span class="service-item__tag">Mentoring</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLIENTS - MARQUEE -->
+    <section class="section" id="clients">
+        <div class="proof">
+            <div class="marquee-container reveal">
+                <div class="marquee">
+                    <span class="marquee__item"><span class="marquee__dot"></span>STARTUP.IO</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>FINTECH+</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>MEDTECH</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>RETAILX</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>DATAFLOW</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>CLOUDNINE</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>NEXGEN</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>INNOVATE</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>STARTUP.IO</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>FINTECH+</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>MEDTECH</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>RETAILX</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>DATAFLOW</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>CLOUDNINE</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>NEXGEN</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>INNOVATE</span>
+                </div>
+            </div>
+            
+            <blockquote class="proof__testimonial reveal">
+                <p class="proof__quote">Nova a transformé notre approche technique. En 6 mois, nous avons réduit nos coûts cloud de 40% tout en doublant notre capacité de déploiement.</p>
+                <footer class="proof__author">
+                    <div class="proof__avatar"></div>
+                    <div class="proof__author-info">
+                        <cite class="proof__author-name">Marie Laurent</cite>
+                        <span class="proof__author-role">CTO, Fintech+</span>
+                    </div>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" id="contact">
+        <div class="cta-section reveal">
+            <h2 class="cta-section__title">Prêt à passer au<br><span class="text-accent">niveau supérieur</span> ?</h2>
+            <p class="cta-section__text">Discutons de votre projet. Premier échange sans engagement.</p>
+            <a href="mailto:contact@nova-consulting.com" class="btn btn--outline btn--large">Contactez-nous</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer"><p class="footer__text">© 2025 Nova Consulting. Tous droits réservés.</p></footer>
+
+    <script>
+/* ============================================
+   PARALLAX STARS + 3D NEURAL NETWORK
+   ============================================ */
+(function() {
+    'use strict';
+
+    const CONFIG = {
+        stars: {
+            layers: [
+                { count: 100, size: [0.5, 1.5], opacity: [0.2, 0.5], parallax: 0.03, drift: 0.02 },
+                { count: 70,  size: [1, 2.5],   opacity: [0.3, 0.7], parallax: 0.1,  drift: 0.04 },
+                { count: 50,  size: [1.5, 3],   opacity: [0.5, 1],   parallax: 0.2,  drift: 0.06 }
+            ],
+            colors: [
+                { h: 0, s: 0, l: 100, w: 50 },
+                { h: 210, s: 25, l: 85, w: 18 },
+                { h: 190, s: 60, l: 75, w: 14 },
+                { h: 270, s: 45, l: 78, w: 12 },
+                { h: 200, s: 40, l: 80, w: 6 }
+            ]
+        },
+        
+        network: {
+            parallax: 0.55,
+            startY: 0.62,
+            endY: 3.15,
+            fadeStartZone: 0.15,
+            fadeEndZone: 0.2,
+            nodesPerSection: 8,
+            branchesPerNode: 2,
+            nodeSize: 4,
+            lineOpacity: 0.18,
+            trembleAmount: 2.5,
+            pulseEnabled: true,
+            pulseSpeed: 2,
+            pulseIntensity: 0.3,
+            enable3D: true,
+            perspective: 800,
+            maxRotationX: 15,
+            depthRange: [-0.5, 0.5],
+            depthScale: 0.4
+        },
+        
+        mouse: { influence: 15, smoothing: 0.06 }
+    };
+
+    const isMobile = window.innerWidth < 768;
+
+    const state = {
+        time: 0,
+        scrollY: 0,
+        scrollProgress: 0,
+        mouseX: 0, mouseY: 0,
+        smoothMouseX: 0, smoothMouseY: 0,
+        viewHeight: 0,
+        maxScroll: 0,
+        isRunning: true
+    };
+
+    const starsCanvas = document.getElementById('starsCanvas');
+    const networkCanvas = document.getElementById('networkCanvas');
+    const starsCtx = starsCanvas.getContext('2d');
+    const networkCtx = networkCanvas.getContext('2d');
+
+    let starsData = [];
+    let networkNodes = [];
+
+    function pickColor() {
+        const colors = CONFIG.stars.colors;
+        const total = colors.reduce((s, c) => s + c.w, 0);
+        let r = Math.random() * total;
+        for (const c of colors) { r -= c.w; if (r <= 0) return c; }
+        return colors[0];
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function rand(min, max) { return min + Math.random() * (max - min); }
+
+    function project3D(x, y, z, centerX, centerY, rotationX) {
+        const { perspective, depthScale } = CONFIG.network;
+        const cosR = Math.cos(rotationX);
+        const sinR = Math.sin(rotationX);
+        const y2 = y * cosR - z * perspective * sinR;
+        const z2 = y * sinR + z * perspective * cosR;
+        const scale = perspective / (perspective + z2 * depthScale);
+        return {
+            x: centerX + (x - centerX) * scale,
+            y: centerY + (y2 - centerY) * scale,
+            scale: scale,
+            depth: z
+        };
+    }
+
+    function initStars() {
+        starsData = [];
+        CONFIG.stars.layers.forEach((layer, layerIndex) => {
+            const count = isMobile ? Math.floor(layer.count * 0.6) : layer.count;
+            for (let i = 0; i < count; i++) {
+                const color = pickColor();
+                starsData.push({
+                    layer: layerIndex,
+                    x: Math.random() * 120 - 10,
+                    y: Math.random() * 140 - 20,
+                    baseX: 0, baseY: 0,
+                    size: lerp(layer.size[0], layer.size[1], Math.random()),
+                    opacity: lerp(layer.opacity[0], layer.opacity[1], Math.random()),
+                    parallax: layer.parallax,
+                    drift: layer.drift,
+                    driftAngle: Math.random() * Math.PI * 2,
+                    driftSpeed: 0.2 + Math.random() * 0.3,
+                    twinkle: { speed: 0.5 + Math.random() * 2, offset: Math.random() * Math.PI * 2 },
+                    color
+                });
+            }
+        });
+        starsData.forEach(s => { s.baseX = s.x; s.baseY = s.y; });
+    }
+
+    function initNetwork() {
+        networkNodes = [];
+        const { startY, endY, nodesPerSection, branchesPerNode, depthRange } = CONFIG.network;
+        const totalHeight = endY - startY;
+        const totalMainNodes = Math.floor(totalHeight * nodesPerSection);
+        
+        const mainPath = [];
+        for (let i = 0; i <= totalMainNodes; i++) {
+            const t = i / totalMainNodes;
+            const y = startY + t * totalHeight;
+            const baseX = 0.5;
+            const amplitude = 0.18;
+            const zigzag = Math.sin(t * Math.PI * 4) * amplitude;
+            const x = i === totalMainNodes ? 0.5 : baseX + zigzag;
+            const z = Math.sin(t * Math.PI * 3) * (depthRange[1] - depthRange[0]) / 2;
+            
+            const node = {
+                id: networkNodes.length,
+                type: i % Math.floor(nodesPerSection / 2) === 0 ? 'main' : 'path',
+                y, x, z,
+                size: i % Math.floor(nodesPerSection / 2) === 0 ? CONFIG.network.nodeSize : CONFIG.network.nodeSize * 0.7,
+                connections: [],
+                networkPosition: t
+            };
+            
+            networkNodes.push(node);
+            mainPath.push(node.id);
+        }
+        
+        for (let i = 0; i < mainPath.length - 1; i++) {
+            networkNodes[mainPath[i]].connections.push(mainPath[i + 1]);
+        }
+        
+        mainPath.forEach((nodeId, idx) => {
+            if (idx === 0 || idx === mainPath.length - 1) return;
+            const mainNode = networkNodes[nodeId];
+            const t = idx / mainPath.length;
+            const branchProb = 1 - (t * 0.5);
+            
+            for (let b = 0; b < branchesPerNode; b++) {
+                if (Math.random() > branchProb) continue;
+                const side = b % 2 === 0 ? -1 : 1;
+                const branchLength = (1 - t * 0.6);
+                const offsetX = side * rand(0.06, 0.15) * branchLength;
+                const offsetY = rand(-0.1, 0.1) * branchLength;
+                const branchZ = mainNode.z + rand(-0.3, 0.3);
+                
+                const branchNode = {
+                    id: networkNodes.length,
+                    type: 'branch',
+                    y: mainNode.y + offsetY,
+                    x: mainNode.x + offsetX,
+                    z: branchZ,
+                    size: CONFIG.network.nodeSize * 0.5,
+                    connections: [],
+                    networkPosition: mainNode.networkPosition
+                };
+                
+                mainNode.connections.push(branchNode.id);
+                networkNodes.push(branchNode);
+                
+                if (Math.random() > 0.6 && t < 0.7) {
+                    const subBranch = {
+                        id: networkNodes.length,
+                        type: 'subbranch',
+                        y: branchNode.y + rand(-0.06, 0.06),
+                        x: branchNode.x + side * rand(0.03, 0.08),
+                        z: branchZ + rand(-0.2, 0.2),
+                        size: CONFIG.network.nodeSize * 0.35,
+                        connections: [],
+                        networkPosition: mainNode.networkPosition
+                    };
+                    branchNode.connections.push(subBranch.id);
+                    networkNodes.push(subBranch);
+                }
+            }
+        });
+        
+        networkNodes.forEach((node, i) => {
+            networkNodes.forEach((other, j) => {
+                if (i >= j) return;
+                if (node.connections.includes(j)) return;
+                const dx = Math.abs(node.x - other.x);
+                const dy = Math.abs(node.y - other.y);
+                if (dx < 0.1 && dy < 0.15 && dy > 0.03 && Math.random() > 0.65) {
+                    node.connections.push(j);
+                }
+            });
+        });
+    }
+
+    function resize() {
+        starsCanvas.width = networkCanvas.width = window.innerWidth;
+        starsCanvas.height = networkCanvas.height = window.innerHeight;
+        state.viewHeight = window.innerHeight;
+        state.maxScroll = document.body.scrollHeight - window.innerHeight;
+    }
+
+    function drawStars() {
+        const { time, scrollY, smoothMouseX, smoothMouseY, viewHeight } = state;
+        const ctx = starsCtx;
+        const w = starsCanvas.width;
+        const h = starsCanvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        starsData.forEach(star => {
+            star.driftAngle += star.driftSpeed * 0.01;
+            const driftX = Math.cos(star.driftAngle) * star.drift * 50;
+            const driftY = Math.sin(star.driftAngle) * star.drift * 30;
+            const parallaxY = scrollY * star.parallax;
+            const mouseX = smoothMouseX * CONFIG.mouse.influence * star.parallax * 3;
+            const mouseY = smoothMouseY * CONFIG.mouse.influence * star.parallax * 2;
+
+            let x = (star.baseX / 100) * w + driftX + mouseX;
+            let y = (star.baseY / 100) * h + driftY - parallaxY + mouseY;
+            const totalH = h * 1.4;
+            y = ((y % totalH) + totalH) % totalH - h * 0.2;
+
+            const twinkle = 0.7 + 0.3 * Math.sin(time * star.twinkle.speed + star.twinkle.offset);
+            const opacity = star.opacity * twinkle;
+
+            const c = star.color;
+            ctx.fillStyle = c.s > 0 
+                ? `hsla(${c.h}, ${c.s}%, ${c.l}%, ${opacity})`
+                : `rgba(255,255,255,${opacity})`;
+            ctx.beginPath();
+            ctx.arc(x, y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function drawNetwork() {
+        const { time, scrollY, scrollProgress, smoothMouseX, smoothMouseY, viewHeight } = state;
+        const ctx = networkCtx;
+        const w = networkCanvas.width;
+        const h = networkCanvas.height;
+        const { 
+            parallax, lineOpacity, trembleAmount, 
+            pulseEnabled, pulseSpeed, pulseIntensity, 
+            fadeStartZone, fadeEndZone,
+            enable3D, maxRotationX 
+        } = CONFIG.network;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const centerX = w / 2;
+        const centerY = h / 2;
+        const rotationX = enable3D ? (scrollProgress * maxRotationX * Math.PI / 180) : 0;
+
+        const screenNodes = networkNodes.map(node => {
+            const docY = node.y * viewHeight;
+            let screenY = docY - scrollY * parallax;
+            const mx = smoothMouseX * CONFIG.mouse.influence;
+            const my = smoothMouseY * CONFIG.mouse.influence * 0.5;
+            const trembleX = Math.sin(time * 2.5 + node.y * 4) * trembleAmount;
+            const trembleY = Math.cos(time * 2 + node.x * 6) * trembleAmount * 0.6;
+
+            let baseX = node.x * w + mx + trembleX;
+            let baseY = screenY + my + trembleY;
+            
+            let projected = { x: baseX, y: baseY, scale: 1, depth: node.z || 0 };
+            if (enable3D) {
+                projected = project3D(baseX, baseY, node.z || 0, centerX, centerY, rotationX);
+            }
+
+            let networkFade = 1;
+            const pos = node.networkPosition || 0;
+            if (pos < fadeStartZone) {
+                networkFade = pos / fadeStartZone;
+            } else if (pos > (1 - fadeEndZone)) {
+                networkFade = (1 - pos) / fadeEndZone;
+            }
+
+            return {
+                x: projected.x,
+                y: projected.y,
+                scale: projected.scale,
+                depth: projected.depth,
+                size: node.size,
+                type: node.type,
+                connections: node.connections,
+                visible: projected.y > -200 && projected.y < h + 200,
+                networkFade: Math.max(0, Math.min(1, networkFade))
+            };
+        });
+
+        const sortedIndices = screenNodes
+            .map((node, idx) => ({ idx, depth: node.depth }))
+            .sort((a, b) => a.depth - b.depth)
+            .map(item => item.idx);
+
+        ctx.lineCap = 'round';
+        sortedIndices.forEach(i => {
+            const node = screenNodes[i];
+            node.connections.forEach(j => {
+                const other = screenNodes[j];
+                if (!other) return;
+                if (!node.visible && !other.visible) return;
+
+                const avgY = (node.y + other.y) / 2;
+                const distFromCenter = Math.abs(avgY - h / 2) / (h / 2);
+                let opacity = lineOpacity * (1 - distFromCenter * 0.5);
+                const avgDepth = (node.depth + other.depth) / 2;
+                opacity *= (0.6 + avgDepth * 0.4 + 0.4);
+                opacity *= Math.min(node.networkFade, other.networkFade);
+                
+                if (node.y < 0) opacity *= Math.max(0, 1 + node.y / 150);
+                if (node.y > h) opacity *= Math.max(0, 1 - (node.y - h) / 150);
+                if (other.y < 0) opacity *= Math.max(0, 1 + other.y / 150);
+                if (other.y > h) opacity *= Math.max(0, 1 - (other.y - h) / 150);
+
+                if (opacity < 0.01) return;
+
+                const midX = (node.x + other.x) / 2 + Math.sin(time * 1.8 + i * 0.5) * 8;
+                const midY = (node.y + other.y) / 2 + Math.cos(time * 1.5 + j * 0.3) * 6;
+
+                const gradient = ctx.createLinearGradient(node.x, node.y, other.x, other.y);
+                gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity})`);
+                gradient.addColorStop(0.5, `rgba(123, 47, 247, ${opacity * 0.7})`);
+                gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity})`);
+
+                const lineWidth = (node.type === 'main' || other.type === 'main' ? 1.3 : 0.9) * ((node.scale + other.scale) / 2);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(node.x, node.y);
+                ctx.quadraticCurveTo(midX, midY, other.x, other.y);
+                ctx.stroke();
+            });
+        });
+
+        sortedIndices.forEach(i => {
+            const node = screenNodes[i];
+            if (!node.visible) return;
+            if (node.y < -80 || node.y > h + 80) return;
+
+            const distFromCenter = Math.abs(node.y - h / 2) / (h / 2);
+            let opacity = 0.75 * (1 - distFromCenter * 0.4);
+            opacity *= (0.5 + node.depth * 0.5 + 0.5);
+            opacity *= node.networkFade;
+            
+            if (node.y < 80) opacity *= node.y / 80;
+            if (node.y > h - 80) opacity *= (h - node.y) / 80;
+            
+            opacity = Math.max(0, Math.min(1, opacity));
+            if (opacity < 0.05) return;
+
+            let pulseScale = 1;
+            if (pulseEnabled && node.type === 'main') {
+                pulseScale = 1 + Math.sin(time * pulseSpeed + i) * pulseIntensity;
+            }
+
+            const sizeMultiplier = node.scale * pulseScale;
+            const displaySize = node.size * sizeMultiplier;
+
+            const glowSize = displaySize * (node.type === 'main' ? 4.5 : 3);
+            const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowSize);
+            gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity * 0.9})`);
+            gradient.addColorStop(0.4, `rgba(123, 47, 247, ${opacity * 0.35})`);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, displaySize, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function animate() {
+        if (!state.isRunning) return;
+        state.time += 0.016;
+        state.scrollProgress = state.maxScroll > 0 ? state.scrollY / state.maxScroll : 0;
+        state.smoothMouseX += (state.mouseX - state.smoothMouseX) * CONFIG.mouse.smoothing;
+        state.smoothMouseY += (state.mouseY - state.smoothMouseY) * CONFIG.mouse.smoothing;
+        drawStars();
+        drawNetwork();
+        document.getElementById('nav').classList.toggle('scrolled', state.scrollY > 100);
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('scroll', () => { state.scrollY = window.scrollY; }, { passive: true });
+    window.addEventListener('resize', () => { resize(); initNetwork(); });
+    document.addEventListener('mousemove', e => {
+        state.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        state.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+        state.isRunning = !document.hidden;
+        if (state.isRunning) animate();
+    });
+
+    function initNav() {
+        const nav = document.getElementById('nav');
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('navLinks');
+        setTimeout(() => nav.classList.add('visible'), 1500);
+        burger?.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
+    function initReveal() {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    function init() {
+        resize();
+        initStars();
+        initNetwork();
+        initNav();
+        initReveal();
+        animate();
+        console.log('🚀 Nova - Clean minimal version');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+    </script>
+</body>
+</html>
