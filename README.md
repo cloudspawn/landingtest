@@ -249,7 +249,7 @@ Le fichier `parallax-galaxy-vf.html` contient l'implémentation complète et fon
 Je travaille sur une landing page pour un cabinet de consulting tech fictif "NOVA".
 
 ## FICHIER DE BASE
-[Joindre le fichier nova-consulting-v8.html]
+[Joindre le fichier nova-consulting-v9.html]
 
 ## CONCEPT VISUEL
 Landing page spatiale avec réseau neuronal 3D animé qui :
