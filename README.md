@@ -241,3 +241,80 @@ Le fichier `parallax-galaxy-vf.html` contient l'implémentation complète et fon
 2. **Accessibilité** : Respecter `prefers-reduced-motion` pour désactiver les animations
 3. **Lisibilité** : Le contenu texte doit toujours rester prioritaire sur les effets
 4. **Équilibre** : Les constellations de fond doivent être visibles mais pas distrayantes
+
+---
+---
+# dernier prompts :
+```
+Je travaille sur une landing page pour un cabinet de consulting tech fictif "NOVA".
+
+## FICHIER DE BASE
+[Joindre le fichier nova-consulting-v8.html]
+
+## CONCEPT VISUEL
+Landing page spatiale avec réseau neuronal 3D animé qui :
+- Crée une ambiance cosmique/tech
+- Accompagne le scroll avec effet parallax
+- Converge vers le bouton CTA final comme point focal
+
+## ÉLÉMENTS ACTUELS
+
+### 1. Fond cosmique
+- Étoiles en 3 couches parallax (profondeurs différentes)
+- Drift continu (mouvement même sans interaction)
+- Réaction au mouvement de souris
+- Triangles/parallélogrammes très subtils en arrière-plan (opacité 0.025)
+
+### 2. Réseau neuronal 3D
+- Nœuds connectés par des lignes courbes
+- Rotation 3D au scroll (effet "facettes" - le réseau pivote sur lui-même)
+- Parallax fort (réseau bouge plus lentement que le scroll)
+- Densité en cloche : moyenne au début → dense au milieu → réduite vers CTA
+- Largeur contrainte : max 50% sur grands écrans, 70% sur mobiles
+- Convergence vers le centre en fin de parcours
+- Fade in/out aux extrémités
+
+### 3. Structure HTML
+- Hero : titre + sous-titre + CTA "Démarrer un projet"
+- Services : 4 items en layout fluide (numéro | contenu | tags)
+- Clients : marquee défilant + testimonial
+- Contact : CTA final avec bouton "Contactez-nous"
+- Footer minimal
+
+### 4. Bouton CTA final
+- 4 nœuds lumineux pulsants aux coins
+- Bordure qui pulse subtilement
+- Filaments du réseau qui convergent vers les coins
+- Glow central
+
+### 5. Style
+- Police : Space Grotesk
+- Couleurs : cyan (#00d4ff), violet (#7b2ff7), fond très sombre (#030308)
+- Boutons rectangulaires (pas arrondis) pour matcher les lignes du réseau
+- Pas de cadres sur les services (layout ouvert)
+- Texte accent : simple couleur cyan, pas d'animation
+
+## PARAMÈTRES TECHNIQUES CLÉS
+javascript
+network: {
+    parallax: 0.35,           // Fort écart avec le scroll
+    maxWidthRatio: 0.5,       // 50% largeur sur grands écrans
+    minDensity: 0.55,
+    maxDensity: 1.4,
+    densityPeakAt: 0.6,       // Pic de densité à 60%
+    rotationYAmplitude: 20,   // Rotation 3D
+    rotationYCycles: 1.0,
+    convergenceStart: 0.72,
+}
+
+
+## CE QUI FONCTIONNE BIEN
+- Effet 3D de rotation au scroll
+- Parallax étoiles + réseau
+- Convergence vers CTA
+- Réactivité souris
+- Responsive mobile
+
+## AJUSTEMENTS POTENTIELS À EXPLORER
+- [Ajouter ici tes prochaines demandes]
+```
