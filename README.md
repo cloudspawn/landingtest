@@ -13,6 +13,12 @@ test rapid paralax galaxy
   - https://cloudspawn.github.io/landingtest/nova-consulting-v5.html
 - https://cloudspawn.github.io/landingtest/nova-consulting-v6.html
 
+## TO DO
+  - basé sur nova consulting v6 et ou galaxy vf, 
+  - partir de l'idee espace, et en scroll down avoir de plus en plsu de connexion, filamenet neurone
+  - call to action final doit etre vu comme un reseau neuronal final, 
+  - rester subtil
+
 # Parallax Galaxy - Documentation & Prompt Réutilisable
 
 ## 🎯 Concept
