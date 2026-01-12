@@ -15,6 +15,7 @@ test rapid paralax galaxy
 
 ### effet 3d cta final en reseau neuronal
   - https://cloudspawn.github.io/landingtest/nova-consulting-v7.html
+  - https://cloudspawn.github.io/landingtest/nova-consulting-v8.html
 
 ## TO DO
   - basé sur nova consulting v6 et ou galaxy vf, 
