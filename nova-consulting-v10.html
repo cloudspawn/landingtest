@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulting tech pour accélérer votre transformation digitale.">
+    <title>NOVA â€” Consulting Tech</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+:root {
+    --cyan: #00d4ff;
+    --cyan-soft: rgba(0, 212, 255, 0.7);
+    --cyan-dim: rgba(0, 212, 255, 0.4);
+    --purple: #7b2ff7;
+    --dark: #030308;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-muted: rgba(255, 255, 255, 0.35);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --font-main: 'Space Grotesk', system-ui, sans-serif;
+    --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-main);
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html { scroll-behavior: auto; }
+}
+
+/* NAV */
+.nav {
+    position: fixed; top: 0; width: 100%; padding: 1.25rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 1000; transition: background 0.3s, transform 0.5s var(--transition-smooth);
+    transform: translateY(-100%);
+}
+.nav.visible { transform: translateY(0); }
+.nav.scrolled { background: rgba(3, 3, 8, 0.95); backdrop-filter: blur(10px); }
+.nav__logo { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
+.nav__links { display: flex; gap: 2rem; list-style: none; }
+.nav__link { color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; font-weight: 500; }
+.nav__link:hover { color: var(--text-primary); }
+
+/* BOUTONS */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.8rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s var(--transition-smooth);
+    font-family: var(--font-main);
+    border: 1px solid;
+}
+
+.btn--primary {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--dark);
+}
+
+.btn--primary:hover {
+    background: white;
+    border-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+}
+
+.btn--outline {
+    background: transparent;
+    border-color: var(--cyan-dim);
+    color: var(--text-primary);
+}
+
+.btn--outline:hover {
+    background: rgba(0, 212, 255, 0.08);
+    border-color: var(--cyan-soft);
+}
+
+.nav__cta {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.7rem;
+}
+
+/* BACKGROUND */
+.parallax-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+    background: radial-gradient(ellipse at center, #080812 0%, var(--dark) 70%);
+}
+
+/* CANVAS */
+.layer-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+}
+.layer-bg-shapes { z-index: -1; }
+.layer-stars { z-index: 0; }
+.layer-network { z-index: 1; }
+
+/* SECTIONS */
+.section {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 6rem 2rem; position: relative;
+}
+.section--hero { padding-top: 0; }
+
+/* HERO */
+.hero { text-align: center; max-width: 850px; position: relative; z-index: 2; }
+.hero__title {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    opacity: 0; transform: translateY(40px);
+    animation: fadeUp 1s var(--transition-smooth) 0.3s forwards;
+}
+
+.text-accent { color: var(--cyan-soft); }
+
+.hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 400;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 0.6s forwards;
+}
+
+.hero__cta {
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 0.9s forwards;
+}
+
+.hero__scroll {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s var(--transition-smooth) 1.2s forwards;
+}
+.hero__scroll-text { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+.hero__scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--text-muted), transparent); position: relative; overflow: hidden; }
+.hero__scroll-line::after { content: ''; position: absolute; top: -15px; left: 0; width: 100%; height: 15px; background: var(--cyan); animation: scrollLine 2s ease-in-out infinite; }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes scrollLine { 0% { top: -15px; opacity: 0; } 30% { opacity: 1; } 100% { top: 40px; opacity: 0; } }
+
+/* SERVICES */
+.services { max-width: 1000px; width: 100%; position: relative; z-index: 2; }
+.services__header { text-align: center; margin-bottom: 5rem; }
+.services__label { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; font-weight: 500; }
+.services__title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 500; letter-spacing: -0.02em; }
+
+.services__list { display: flex; flex-direction: column; gap: 4rem; }
+
+.service-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    padding: 0 1rem;
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.service-item:hover .service-item__title { color: var(--text-primary); }
+.service-item:hover .service-item__number { color: var(--cyan); }
+
+.service-item__number {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    padding-top: 0.5rem;
+    transition: color 0.3s;
+}
+
+.service-item__content { max-width: 500px; }
+.service-item__title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+}
+
+.service-item__text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.service-item__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    justify-content: flex-end;
+}
+
+.service-item__tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.service-item:not(:last-child)::after {
+    content: '';
+    grid-column: 1 / -1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-subtle) 20%, var(--border-subtle) 80%, transparent);
+    margin-top: 4rem;
+}
+
+/* CLIENTS */
+.proof { max-width: 100%; width: 100%; position: relative; z-index: 2; overflow: hidden; }
+
+.marquee-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 5rem;
+}
+
+.marquee-container::before,
+.marquee-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.marquee-container::before { left: 0; background: linear-gradient(90deg, var(--dark) 0%, transparent 100%); }
+.marquee-container::after { right: 0; background: linear-gradient(90deg, transparent 0%, var(--dark) 100%); }
+
+.marquee {
+    display: flex;
+    gap: 4rem;
+    animation: marquee 30s linear infinite;
+}
+
+.marquee:hover { animation-play-state: paused; }
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.marquee__item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    transition: color 0.3s;
+    white-space: nowrap;
+}
+
+.marquee__item:hover { color: var(--text-secondary); }
+
+.marquee__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0.4;
+}
+
+.proof__testimonial {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.proof__quote {
+    font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.proof__quote::before { content: '"'; }
+.proof__quote::after { content: '"'; }
+
+.proof__author { display: flex; align-items: center; justify-content: center; gap: 1rem; }
+
+.proof__avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    position: relative;
+}
+
+.proof__avatar::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: var(--dark);
+}
+
+.proof__author-info { text-align: left; }
+.proof__author-name { font-weight: 500; font-size: 0.85rem; }
+.proof__author-role { font-size: 0.7rem; color: var(--text-muted); }
+
+/* CTA */
+.section--contact {
+    min-height: 110vh;
+    padding-top: 12rem;
+    padding-bottom: 8rem;
+}
+
+.cta-section { 
+    text-align: center; 
+    max-width: 550px; 
+    position: relative; 
+    z-index: 2;
+    padding-bottom: 2rem;
+    margin-top: 8rem;
+}
+
+.cta-section__title { 
+    font-size: clamp(1.75rem, 4vw, 2.5rem); 
+    font-weight: 500; 
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.cta-section__text { 
+    color: var(--text-secondary); 
+    font-size: 0.95rem; 
+    margin-bottom: 2.5rem;
+}
+
+/* === CTA BOUTON FOCAL === */
+.cta-node {
+    position: relative;
+    display: inline-block;
+}
+
+.cta-node__btn {
+    position: relative;
+    z-index: 2;
+    padding: 1.2rem 2.8rem;
+    font-size: 0.85rem;
+    background: transparent;
+    border: 1px solid var(--cyan-dim);
+    color: var(--text-primary);
+    transition: all 0.4s var(--transition-smooth);
+}
+
+.cta-node__btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--cyan);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
+}
+
+.cta-node__corner {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 8px var(--cyan), 0 0 15px rgba(0, 212, 255, 0.4);
+    animation: nodeFloat 3s ease-in-out infinite;
+}
+
+.cta-node__corner--tl { top: -3px; left: -3px; animation-delay: 0s; }
+.cta-node__corner--tr { top: -3px; right: -3px; animation-delay: 0.75s; }
+.cta-node__corner--bl { bottom: -3px; left: -3px; animation-delay: 1.5s; }
+.cta-node__corner--br { bottom: -3px; right: -3px; animation-delay: 2.25s; }
+
+@keyframes nodeFloat {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+}
+
+.cta-node__btn::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--cyan);
+    opacity: 0;
+    animation: borderPulse 4s ease-in-out infinite;
+}
+
+@keyframes borderPulse {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.02); }
+}
+
+/* FOOTER */
+.footer { 
+    padding: 2.5rem 2rem; 
+    text-align: center; 
+    border-top: 1px solid var(--border-subtle);
+    position: relative;
+    z-index: 2;
+}
+.footer__text { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.05em; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s var(--transition-smooth); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .nav { padding: 1rem 1.5rem; }
+    .nav__links { 
+        position: fixed; right: -100%; top: 0; height: 100vh; width: 70%; 
+        background: rgba(3,3,8,0.98); flex-direction: column; 
+        align-items: center; justify-content: center; gap: 2rem; 
+        transition: right 0.3s; 
+    }
+    .nav__links.active { right: 0; }
+    .nav__burger { display: flex; }
+    .nav__cta { display: none; }
+    
+    .service-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .service-item__tags {
+        justify-content: flex-start;
+        padding-top: 1rem;
+    }
+    
+    .service-item:not(:last-child)::after { margin-top: 3rem; }
+    .section { padding: 4rem 1.5rem; }
+    .marquee { gap: 2.5rem; }
+}
+
+.nav__burger { display: none; flex-direction: column; cursor: pointer; gap: 6px; }
+.nav__burger span { width: 28px; height: 2px; background: white; }
+@media (max-width: 768px) { .nav__burger { display: flex; } }
+    </style>
+</head>
+<body>
+
+    <nav class="nav" id="nav">
+        <a href="#hero" class="nav__logo">NOVA</a>
+        <ul class="nav__links" id="navLinks">
+            <li><a href="#hero" class="nav__link">Accueil</a></li>
+            <li><a href="#services" class="nav__link">Services</a></li>
+            <li><a href="#clients" class="nav__link">Clients</a></li>
+            <li><a href="#contact" class="nav__link">Contact</a></li>
+        </ul>
+        <a href="#contact" class="btn btn--outline nav__cta">Parlons-en</a>
+        <div class="nav__burger" id="burger"><span></span><span></span><span></span></div>
+    </nav>
+
+    <div class="parallax-bg"></div>
+    
+    <!-- Background shapes (triangles subtils) -->
+    <canvas class="layer-canvas layer-bg-shapes" id="bgShapesCanvas"></canvas>
+    
+    <canvas class="layer-canvas layer-stars" id="starsCanvas"></canvas>
+    <canvas class="layer-canvas layer-network" id="networkCanvas"></canvas>
+
+    <section class="section section--hero" id="hero">
+        <div class="hero">
+            <h1 class="hero__title">Accélérez votre<br><span class="text-accent">transformation digitale</span></h1>
+            <p class="hero__subtitle">Conseil stratégique et expertise technique pour les entreprises qui veulent construire le futur, pas le subir.</p>
+            <a href="#contact" class="btn btn--primary hero__cta">
+                Démarrer un projet 
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="hero__scroll"><span class="hero__scroll-text">Scroll</span><div class="hero__scroll-line"></div></div>
+    </section>
+
+    <section class="section" id="services">
+        <div class="services">
+            <header class="services__header reveal">
+                <p class="services__label">Ce que nous faisons</p>
+                <h2 class="services__title">Expertise technique, vision stratégique</h2>
+            </header>
+            
+            <div class="services__list">
+                <article class="service-item reveal reveal-delay-1">
+                    <span class="service-item__number">01</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Stratégie Tech</h3>
+                        <p class="service-item__text">Audit complet de votre infrastructure, définition de la roadmap technologique et choix d'architecture alignés sur vos objectifs business.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Audit</span>
+                        <span class="service-item__tag">Roadmap</span>
+                        <span class="service-item__tag">Architecture</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-2">
+                    <span class="service-item__number">02</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Développement</h3>
+                        <p class="service-item__text">Applications web et mobile, APIs robustes et microservices scalables. Code maintenable, testé, documenté.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">React</span>
+                        <span class="service-item__tag">Node.js</span>
+                        <span class="service-item__tag">TypeScript</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-3">
+                    <span class="service-item__number">03</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Cloud & DevOps</h3>
+                        <p class="service-item__text">Migration cloud, pipelines CI/CD, infrastructure as code. Optimisation des coûts et de la performance.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">AWS</span>
+                        <span class="service-item__tag">Terraform</span>
+                        <span class="service-item__tag">Kubernetes</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-4">
+                    <span class="service-item__number">04</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Accompagnement</h3>
+                        <p class="service-item__text">Montée en compétences de vos équipes, transfert de connaissances et accompagnement dans la durée.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Formation</span>
+                        <span class="service-item__tag">Coaching</span>
+                        <span class="service-item__tag">Mentoring</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="clients">
+        <div class="proof">
+            <div class="marquee-container reveal">
+                <div class="marquee">
+                    <span class="marquee__item"><span class="marquee__dot"></span>STARTUP.IO</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>FINTECH+</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>MEDTECH</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>RETAILX</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>DATAFLOW</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>CLOUDNINE</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>NEXGEN</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>INNOVATE</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>STARTUP.IO</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>FINTECH+</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>MEDTECH</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>RETAILX</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>DATAFLOW</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>CLOUDNINE</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>NEXGEN</span>
+                    <span class="marquee__item"><span class="marquee__dot"></span>INNOVATE</span>
+                </div>
+            </div>
+            
+            <blockquote class="proof__testimonial reveal">
+                <p class="proof__quote">Nova a transformé notre approche technique. En 6 mois, nous avons réduit nos coûts cloud de 40% tout en doublant notre capacité de déploiement.</p>
+                <footer class="proof__author">
+                    <div class="proof__avatar"></div>
+                    <div class="proof__author-info">
+                        <cite class="proof__author-name">Marie Laurent</cite>
+                        <span class="proof__author-role">CTO, Fintech+</span>
+                    </div>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <section class="section section--contact" id="contact">
+        <div class="cta-section reveal">
+            <h2 class="cta-section__title">Prêt à passer au<br><span class="text-accent">niveau supérieur</span> ?</h2>
+            <p class="cta-section__text">Discutons de votre projet. Premier échange sans engagement.</p>
+            <div class="cta-node" id="ctaNode">
+                <span class="cta-node__corner cta-node__corner--tl"></span>
+                <span class="cta-node__corner cta-node__corner--tr"></span>
+                <span class="cta-node__corner cta-node__corner--bl"></span>
+                <span class="cta-node__corner cta-node__corner--br"></span>
+                <a href="mailto:contact@nova-consulting.com" class="btn cta-node__btn" id="ctaBtn">Contactez-nous</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer"><p class="footer__text">© 2025 Nova Consulting. Tous droits réservés.</p></footer>
+
+    <script>
+(function() {
+    'use strict';
+
+    const CONFIG = {
+        stars: {
+            layers: [
+                { count: 80, size: [0.3, 1], opacity: [0.1, 0.35], parallax: 0.015, drift: 0.01 },
+                { count: 50, size: [0.6, 1.5], opacity: [0.15, 0.5], parallax: 0.06, drift: 0.025 },
+                { count: 25, size: [1, 2], opacity: [0.3, 0.8], parallax: 0.12, drift: 0.04 }
+            ],
+            colors: [
+                { h: 0, s: 0, l: 100, w: 65 },
+                { h: 210, s: 15, l: 90, w: 20 },
+                { h: 190, s: 40, l: 80, w: 10 },
+                { h: 270, s: 30, l: 82, w: 5 }
+            ]
+        },
+        
+        // Triangles/formes subtiles en arrière-plan
+        bgShapes: {
+            count: 12,
+            parallax: 0.03,
+            opacity: 0.025,
+            sizeRange: [30, 80]
+        },
+        
+        network: {
+            // PARALLAX FORT : réseau bouge beaucoup moins vite que le scroll
+            parallax: 0.35,
+            
+            startY: 0.35,
+            endY: 3.8,  // Étendu pour atteindre le CTA
+            
+            // DENSITÉ AUGMENTÉE
+            minDensity: 0.75,
+            maxDensity: 1.9,
+            densityPeakAt: 0.55,
+            densityAtEnd: 0.5,
+            
+            // LARGEUR CONTRAINTE (% de l'écran utilisé)
+            maxWidthRatio: 0.5,  // Max 50% de largeur sur grands écrans
+            minWidthRatio: 0.7,  // 70% sur petits écrans
+            
+            minBranches: 1,
+            maxBranches: 4,
+            
+            convergenceStart: 0.68,
+            convergenceStrength: 0.85,
+            
+            baseNodesPerSection: 6,
+            nodeSize: 3.5,
+            lineOpacity: 0.35,
+            trembleAmount: 1.2,
+            
+            pulseEnabled: true,
+            pulseSpeed: 1.5,
+            pulseIntensity: 0.2,
+            
+            enable3D: true,
+            perspective: 900,
+            rotationYAmplitude: 28,
+            rotationYCycles: 1.0,
+            rotationXRange: [0, 14],
+            depthSpread: 150,
+        },
+        
+        ctaNode: {
+            enabled: true,
+            connectionCount: 24,
+            glowIntensity: 1.6,
+            pulseSpeed: 1.2,
+            connectionOpacity: 0.7,
+        },
+        
+        mouse: { 
+            influence: 18, 
+            smoothing: 0.05,
+            rotationInfluence: 12
+        }
+    };
+
+    const isMobile = window.innerWidth < 768;
+
+    const state = {
+        time: 0,
+        scrollY: 0,
+        scrollProgress: 0,
+        mouseX: 0, mouseY: 0,
+        smoothMouseX: 0, smoothMouseY: 0,
+        viewHeight: 0,
+        viewWidth: 0,
+        maxScroll: 0,
+        isRunning: true,
+        ctaCorners: [],
+        // Animation de connexion CTA
+        ctaConnectionAnim: 0,        // 0 = pas d'anim, 1 = anim complète
+        ctaConnectionTarget: 0,      // Cible de l'animation
+        ctaConnectionSpeed: 0.025    // Vitesse d'animation
+    };
+
+    const bgShapesCanvas = document.getElementById('bgShapesCanvas');
+    const starsCanvas = document.getElementById('starsCanvas');
+    const networkCanvas = document.getElementById('networkCanvas');
+    const bgShapesCtx = bgShapesCanvas.getContext('2d');
+    const starsCtx = starsCanvas.getContext('2d');
+    const networkCtx = networkCanvas.getContext('2d');
+
+    let starsData = [];
+    let networkNodes = [];
+    let bgShapes = [];
+
+    function pickColor() {
+        const colors = CONFIG.stars.colors;
+        const total = colors.reduce((s, c) => s + c.w, 0);
+        let r = Math.random() * total;
+        for (const c of colors) { r -= c.w; if (r <= 0) return c; }
+        return colors[0];
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function rand(min, max) { return min + Math.random() * (max - min); }
+    function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function getDensityAtT(t) {
+        const { minDensity, maxDensity, densityPeakAt, densityAtEnd } = CONFIG.network;
+        if (t <= densityPeakAt) {
+            return lerp(minDensity, maxDensity, easeOut(t / densityPeakAt));
+        } else {
+            return lerp(maxDensity, densityAtEnd * minDensity, easeInOut((t - densityPeakAt) / (1 - densityPeakAt)));
+        }
+    }
+    
+    // Calcul de la largeur du réseau selon taille écran
+    function getNetworkWidth() {
+        const { maxWidthRatio, minWidthRatio } = CONFIG.network;
+        const screenWidth = state.viewWidth;
+        
+        // Sur grands écrans (>1400px), utiliser maxWidthRatio
+        // Sur petits écrans (<768px), utiliser minWidthRatio
+        if (screenWidth > 1400) return screenWidth * maxWidthRatio;
+        if (screenWidth < 768) return screenWidth * minWidthRatio;
+        
+        // Interpolation entre les deux
+        const t = (screenWidth - 768) / (1400 - 768);
+        return screenWidth * lerp(minWidthRatio, maxWidthRatio, t);
+    }
+
+    function project3D(node, centerX, centerY, rotationY, rotationX) {
+        const { perspective, depthSpread } = CONFIG.network;
+        
+        let x = node.screenX;
+        let y = node.screenY;
+        let z = (node.z || 0) * depthSpread;
+        
+        let rx = x - centerX;
+        let ry = y - centerY;
+        let rz = z;
+        
+        const cosY = Math.cos(rotationY);
+        const sinY = Math.sin(rotationY);
+        const rx2 = rx * cosY + rz * sinY;
+        const rz2 = -rx * sinY + rz * cosY;
+        
+        const cosX = Math.cos(rotationX);
+        const sinX = Math.sin(rotationX);
+        const ry2 = ry * cosX - rz2 * sinX;
+        const rz3 = ry * sinX + rz2 * cosX;
+        
+        const scale = perspective / (perspective + rz3);
+        
+        return {
+            x: centerX + rx2 * scale,
+            y: centerY + ry2 * scale,
+            scale: Math.max(0.2, Math.min(2.5, scale)),
+            depth: rz3
+        };
+    }
+
+    function initBgShapes() {
+        bgShapes = [];
+        const { count, sizeRange } = CONFIG.bgShapes;
+        
+        for (let i = 0; i < count; i++) {
+            // Triangles ou parallélogrammes
+            const isTriangle = Math.random() > 0.4;
+            const size = rand(sizeRange[0], sizeRange[1]);
+            
+            bgShapes.push({
+                x: Math.random() * 100,
+                y: Math.random() * 400, // Sur toute la hauteur de la page
+                size,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.0003,
+                isTriangle,
+                aspectRatio: isTriangle ? 1 : rand(0.6, 1.5)
+            });
+        }
+    }
+
+    function initStars() {
+        starsData = [];
+        CONFIG.stars.layers.forEach((layer) => {
+            const count = isMobile ? Math.floor(layer.count * 0.5) : layer.count;
+            for (let i = 0; i < count; i++) {
+                const color = pickColor();
+                starsData.push({
+                    x: Math.random() * 120 - 10,
+                    y: Math.random() * 140 - 20,
+                    baseX: 0, baseY: 0,
+                    size: lerp(layer.size[0], layer.size[1], Math.random()),
+                    opacity: lerp(layer.opacity[0], layer.opacity[1], Math.random()),
+                    parallax: layer.parallax,
+                    drift: layer.drift,
+                    driftAngle: Math.random() * Math.PI * 2,
+                    driftSpeed: 0.12 + Math.random() * 0.2,
+                    twinkle: { speed: 0.2 + Math.random() * 1.2, offset: Math.random() * Math.PI * 2 },
+                    color
+                });
+            }
+        });
+        starsData.forEach(s => { s.baseX = s.x; s.baseY = s.y; });
+    }
+
+    function initNetwork() {
+        networkNodes = [];
+        const { 
+            startY, endY, minBranches, maxBranches,
+            convergenceStart, convergenceStrength
+        } = CONFIG.network;
+        
+        const totalHeight = endY - startY;
+        const mainPath = [];
+        let currentY = startY;
+        let nodeId = 0;
+        
+        while (currentY <= endY) {
+            const t = (currentY - startY) / totalHeight;
+            
+            const density = getDensityAtT(t);
+            const spacing = 0.11 / density;
+            
+            let baseX = 0.5;
+            const amplitude = 0.2 * (1 - t * 0.35);
+            const frequency = 3.5 + t * 1.5;
+            const zigzag = Math.sin(t * Math.PI * frequency) * amplitude;
+            
+            if (t > convergenceStart) {
+                const convergenceT = (t - convergenceStart) / (1 - convergenceStart);
+                baseX = lerp(0.5 + zigzag, 0.5, easeInOut(convergenceT) * convergenceStrength);
+            } else {
+                baseX = 0.5 + zigzag;
+            }
+            
+            const z = Math.sin(t * Math.PI * 5 + baseX * 3) * 0.4 + 
+                      Math.cos(t * Math.PI * 2.5) * 0.25;
+            
+            const isMainNode = mainPath.length % 4 === 0;
+            
+            const node = {
+                id: nodeId++,
+                type: isMainNode ? 'main' : 'path',
+                y: currentY,
+                x: baseX,
+                z: z,
+                size: isMainNode ? CONFIG.network.nodeSize : CONFIG.network.nodeSize * 0.55,
+                connections: [],
+                networkPosition: t
+            };
+            
+            networkNodes.push(node);
+            mainPath.push(node.id);
+            
+            currentY += spacing;
+        }
+        
+        for (let i = 0; i < mainPath.length - 1; i++) {
+            networkNodes[mainPath[i]].connections.push(mainPath[i + 1]);
+        }
+        
+        mainPath.forEach((nodeId, idx) => {
+            if (idx === 0 || idx === mainPath.length - 1) return;
+            
+            const mainNode = networkNodes[nodeId];
+            const t = mainNode.networkPosition;
+            
+            const densityFactor = getDensityAtT(t) / CONFIG.network.maxDensity;
+            const branchCount = Math.round(lerp(minBranches, maxBranches, densityFactor));
+            
+            for (let b = 0; b < branchCount; b++) {
+                const branchProb = t < 0.85 ? (0.4 + densityFactor * 0.35) : (0.2 * (1 - (t - 0.85) / 0.15));
+                if (Math.random() > branchProb) continue;
+                
+                const side = (b % 2 === 0 ? -1 : 1);
+                const branchLength = 0.04 + Math.random() * 0.08 * densityFactor;
+                
+                let offsetX = side * branchLength;
+                if (t > convergenceStart) {
+                    const conv = (t - convergenceStart) / (1 - convergenceStart);
+                    offsetX *= (1 - conv * 0.9);
+                }
+                
+                const offsetY = rand(-0.035, 0.035);
+                const branchZ = mainNode.z + rand(-0.5, 0.5);
+                
+                const branchNode = {
+                    id: networkNodes.length,
+                    type: 'branch',
+                    y: mainNode.y + offsetY,
+                    x: Math.max(0.15, Math.min(0.85, mainNode.x + offsetX)),
+                    z: branchZ,
+                    size: CONFIG.network.nodeSize * 0.35,
+                    connections: [],
+                    networkPosition: t
+                };
+                
+                mainNode.connections.push(branchNode.id);
+                networkNodes.push(branchNode);
+                
+                if (t < 0.75 && Math.random() < 0.25 * densityFactor) {
+                    const subBranch = {
+                        id: networkNodes.length,
+                        type: 'subbranch',
+                        y: branchNode.y + rand(-0.025, 0.025),
+                        x: Math.max(0.12, Math.min(0.88, branchNode.x + side * rand(0.015, 0.04))),
+                        z: branchZ + rand(-0.35, 0.35),
+                        size: CONFIG.network.nodeSize * 0.2,
+                        connections: [],
+                        networkPosition: t
+                    };
+                    branchNode.connections.push(subBranch.id);
+                    networkNodes.push(subBranch);
+                }
+            }
+        });
+        
+        networkNodes.forEach((node, i) => {
+            const t = node.networkPosition || 0;
+            const densityFactor = getDensityAtT(t) / CONFIG.network.maxDensity;
+            
+            networkNodes.forEach((other, j) => {
+                if (i >= j) return;
+                if (node.connections.includes(j)) return;
+                
+                const dx = Math.abs(node.x - other.x);
+                const dy = Math.abs(node.y - other.y);
+                
+                const connectionProb = 0.85 - densityFactor * 0.15;
+                
+                if (dx < 0.1 && dy < 0.07 && dy > 0.01 && Math.random() > connectionProb) {
+                    node.connections.push(j);
+                }
+            });
+        });
+    }
+
+    function updateCtaCorners() {
+        const ctaNode = document.getElementById('ctaNode');
+        if (ctaNode) {
+            const rect = ctaNode.getBoundingClientRect();
+            state.ctaCorners = [
+                { x: rect.left, y: rect.top },
+                { x: rect.right, y: rect.top },
+                { x: rect.left, y: rect.bottom },
+                { x: rect.right, y: rect.bottom },
+                { x: rect.left + rect.width/2, y: rect.top + rect.height/2 }
+            ];
+        }
+    }
+
+    function resize() {
+        bgShapesCanvas.width = starsCanvas.width = networkCanvas.width = window.innerWidth;
+        bgShapesCanvas.height = starsCanvas.height = networkCanvas.height = window.innerHeight;
+        state.viewHeight = window.innerHeight;
+        state.viewWidth = window.innerWidth;
+        state.maxScroll = document.body.scrollHeight - window.innerHeight;
+        updateCtaCorners();
+    }
+
+    function drawBgShapes() {
+        const { time, scrollY } = state;
+        const ctx = bgShapesCtx;
+        const w = bgShapesCanvas.width;
+        const h = bgShapesCanvas.height;
+        const { parallax, opacity } = CONFIG.bgShapes;
+
+        ctx.clearRect(0, 0, w, h);
+        
+        bgShapes.forEach(shape => {
+            shape.rotation += shape.rotationSpeed;
+            
+            const x = (shape.x / 100) * w;
+            const y = (shape.y / 100) * h - scrollY * parallax;
+            
+            // Wrap around
+            const wrappedY = ((y % (h * 4)) + h * 4) % (h * 4) - h;
+            
+            if (wrappedY < -100 || wrappedY > h + 100) return;
+            
+            ctx.save();
+            ctx.translate(x, wrappedY);
+            ctx.rotate(shape.rotation);
+            ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
+            ctx.lineWidth = 0.5;
+            
+            ctx.beginPath();
+            if (shape.isTriangle) {
+                const s = shape.size;
+                ctx.moveTo(0, -s/2);
+                ctx.lineTo(s/2, s/2);
+                ctx.lineTo(-s/2, s/2);
+                ctx.closePath();
+            } else {
+                // Parallélogramme
+                const s = shape.size;
+                const skew = s * 0.3;
+                ctx.moveTo(-s/2 + skew, -s/2 * shape.aspectRatio);
+                ctx.lineTo(s/2 + skew, -s/2 * shape.aspectRatio);
+                ctx.lineTo(s/2 - skew, s/2 * shape.aspectRatio);
+                ctx.lineTo(-s/2 - skew, s/2 * shape.aspectRatio);
+                ctx.closePath();
+            }
+            ctx.stroke();
+            ctx.restore();
+        });
+    }
+
+    function drawStars() {
+        const { time, scrollY, smoothMouseX, smoothMouseY } = state;
+        const ctx = starsCtx;
+        const w = starsCanvas.width;
+        const h = starsCanvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        starsData.forEach(star => {
+            star.driftAngle += star.driftSpeed * 0.006;
+            const driftX = Math.cos(star.driftAngle) * star.drift * 35;
+            const driftY = Math.sin(star.driftAngle) * star.drift * 20;
+            const parallaxY = scrollY * star.parallax;
+            const mouseX = smoothMouseX * CONFIG.mouse.influence * star.parallax * 2;
+            const mouseY = smoothMouseY * CONFIG.mouse.influence * star.parallax * 1.2;
+
+            let x = (star.baseX / 100) * w + driftX + mouseX;
+            let y = (star.baseY / 100) * h + driftY - parallaxY + mouseY;
+            const totalH = h * 1.4;
+            y = ((y % totalH) + totalH) % totalH - h * 0.2;
+
+            const twinkle = 0.6 + 0.4 * Math.sin(time * star.twinkle.speed + star.twinkle.offset);
+            const opacity = star.opacity * twinkle;
+
+            const c = star.color;
+            ctx.fillStyle = c.s > 0 
+                ? `hsla(${c.h}, ${c.s}%, ${c.l}%, ${opacity})`
+                : `rgba(255,255,255,${opacity})`;
+            ctx.beginPath();
+            ctx.arc(x, y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function drawNetwork() {
+        const { time, scrollY, scrollProgress, smoothMouseX, smoothMouseY, viewHeight, viewWidth, ctaCorners } = state;
+        const ctx = networkCtx;
+        const w = networkCanvas.width;
+        const h = networkCanvas.height;
+        const { 
+            parallax, lineOpacity, trembleAmount, 
+            pulseEnabled, pulseSpeed, pulseIntensity,
+            enable3D, rotationYAmplitude, rotationYCycles, rotationXRange
+        } = CONFIG.network;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const centerX = w / 2;
+        const centerY = h / 2;
+        
+        // Largeur contrainte du réseau
+        const networkWidth = getNetworkWidth();
+        const networkLeft = (w - networkWidth) / 2;
+        
+        const rotationYScroll = Math.sin(scrollProgress * Math.PI * 2 * rotationYCycles) * rotationYAmplitude;
+        const rotationYMouse = smoothMouseX * CONFIG.mouse.rotationInfluence;
+        const rotationY = (rotationYScroll + rotationYMouse) * Math.PI / 180;
+        
+        const rotationXScroll = lerp(rotationXRange[0], rotationXRange[1], scrollProgress);
+        const rotationXMouse = smoothMouseY * CONFIG.mouse.rotationInfluence * 0.4;
+        const rotationX = (rotationXScroll + rotationXMouse) * Math.PI / 180;
+
+        networkNodes.forEach(node => {
+            const docY = node.y * viewHeight;
+            const screenY = docY - scrollY * parallax;
+            
+            const mx = smoothMouseX * CONFIG.mouse.influence * 0.4;
+            const my = smoothMouseY * CONFIG.mouse.influence * 0.25;
+            
+            const trembleX = Math.sin(time * 1.8 + node.y * 2.5 + node.x * 1.5) * trembleAmount;
+            const trembleY = Math.cos(time * 1.3 + node.x * 4) * trembleAmount * 0.4;
+
+            // Position X contrainte à la largeur du réseau
+            node.screenX = networkLeft + node.x * networkWidth + mx + trembleX;
+            node.screenY = screenY + my + trembleY;
+        });
+
+        const screenNodes = networkNodes.map(node => {
+            let projected;
+            
+            if (enable3D) {
+                projected = project3D(node, centerX, centerY, rotationY, rotationX);
+            } else {
+                projected = { x: node.screenX, y: node.screenY, scale: 1, depth: 0 };
+            }
+
+            const t = node.networkPosition || 0;
+            let networkFade = 1;
+            if (t < 0.05) networkFade = t / 0.05;
+            if (t > 0.9) networkFade = (1 - t) / 0.1;
+
+            return {
+                x: projected.x,
+                y: projected.y,
+                scale: projected.scale,
+                depth: projected.depth,
+                size: node.size,
+                type: node.type,
+                connections: node.connections,
+                visible: projected.y > -150 && projected.y < h + 150,
+                networkFade: Math.max(0, Math.min(1, networkFade)),
+                networkPosition: t
+            };
+        });
+
+        const sortedIndices = screenNodes
+            .map((node, idx) => ({ idx, depth: node.depth }))
+            .sort((a, b) => a.depth - b.depth)
+            .map(item => item.idx);
+
+        ctx.lineCap = 'round';
+        sortedIndices.forEach(i => {
+            const node = screenNodes[i];
+            node.connections.forEach(j => {
+                const other = screenNodes[j];
+                if (!other) return;
+                if (!node.visible && !other.visible) return;
+
+                const avgY = (node.y + other.y) / 2;
+                const distFromCenter = Math.abs(avgY - h / 2) / (h / 2);
+                
+                const avgT = (node.networkPosition + (other.networkPosition || 0)) / 2;
+                let opacity = lineOpacity * (0.6 + avgT * 0.4);
+                opacity *= (1 - distFromCenter * 0.2);
+                
+                const avgDepth = (node.depth + other.depth) / 2;
+                const depthFactor = 0.5 + (1 - (avgDepth + 150) / 300) * 0.5;
+                opacity *= Math.max(0.3, Math.min(1, depthFactor));
+                
+                opacity *= Math.min(node.networkFade, other.networkFade || 1);
+                
+                if (node.y < 0) opacity *= Math.max(0, 1 + node.y / 80);
+                if (node.y > h) opacity *= Math.max(0, 1 - (node.y - h) / 80);
+                if (other.y < 0) opacity *= Math.max(0, 1 + other.y / 80);
+                if (other.y > h) opacity *= Math.max(0, 1 - (other.y - h) / 80);
+
+                if (opacity < 0.004) return;
+
+                const midX = (node.x + other.x) / 2 + Math.sin(time * 0.8 + i * 0.15) * 2.5;
+                const midY = (node.y + other.y) / 2 + Math.cos(time * 0.6 + j * 0.1) * 1.5;
+
+                const gradient = ctx.createLinearGradient(node.x, node.y, other.x, other.y);
+                gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity})`);
+                gradient.addColorStop(0.5, `rgba(123, 47, 247, ${opacity * 0.5})`);
+                gradient.addColorStop(1, `rgba(0, 212, 255, ${opacity})`);
+
+                let lineWidth = 0.5;
+                if (node.type === 'main' || other.type === 'main') lineWidth = 1.1;
+                else if (node.type === 'path' || other.type === 'path') lineWidth = 0.8;
+                lineWidth *= ((node.scale + other.scale) / 2);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(node.x, node.y);
+                ctx.quadraticCurveTo(midX, midY, other.x, other.y);
+                ctx.stroke();
+            });
+        });
+
+        // Connexions CTA - Filaments vers les 4 coins avec animation
+        if (CONFIG.ctaNode.enabled && ctaCorners.length >= 5) {
+            const ctaCenter = ctaCorners[4];
+            const corners = ctaCorners.slice(0, 4); // TL, TR, BL, BR
+            
+            // Animation progressive de connexion
+            if (state.ctaConnectionAnim < state.ctaConnectionTarget) {
+                state.ctaConnectionAnim = Math.min(state.ctaConnectionTarget, 
+                    state.ctaConnectionAnim + state.ctaConnectionSpeed);
+            }
+            
+            // Facteur d'animation (0 à 1)
+            const animFactor = Math.min(1, state.ctaConnectionAnim);
+            
+            if (ctaCenter.y > -100 && ctaCenter.y < h + 200) {
+                
+                corners.forEach((corner, cornerIdx) => {
+                    const isLeft = cornerIdx === 0 || cornerIdx === 2;
+                    
+                    // Offset 3D basé sur la souris pour effet de profondeur
+                    const mouseOffset3D = {
+                        x: smoothMouseX * 8 * (isLeft ? -1 : 1),
+                        y: smoothMouseY * 5
+                    };
+                    
+                    // Point d'arrivée avec effet 3D souris
+                    const targetX = corner.x + mouseOffset3D.x * 0.3;
+                    const targetY = corner.y + mouseOffset3D.y * 0.2;
+                    
+                    // Nœuds AU-DESSUS du bouton, du bon côté
+                    const eligibleNodes = screenNodes
+                        .filter(n => {
+                            if (!n.visible || n.networkPosition < 0.45) return false;
+                            if (n.y > ctaCenter.y + 20) return false;
+                            const nodeIsLeft = n.x < ctaCenter.x;
+                            if (isLeft && !nodeIsLeft) return false;
+                            if (!isLeft && nodeIsLeft) return false;
+                            return true;
+                        })
+                        .map(n => ({
+                            ...n,
+                            distToCorner: Math.sqrt(Math.pow(n.x - corner.x, 2) + Math.pow(n.y - corner.y, 2))
+                        }))
+                        .sort((a, b) => a.distToCorner - b.distToCorner)
+                        .slice(0, Math.ceil(CONFIG.ctaNode.connectionCount / 4) + 2);
+                    
+                    eligibleNodes.forEach((node, idx) => {
+                        if (node.distToCorner > 450) return;
+                        
+                        const distFactor = 1 - node.distToCorner / 450;
+                        
+                        // Opacité avec animation de connexion
+                        const connectionBoost = animFactor > 0 ? 
+                            (1 + Math.sin(time * 3 + cornerIdx) * 0.3 * animFactor) : 1;
+                        const baseOpacity = Math.pow(distFactor, 1.0) * 0.8 * 
+                            CONFIG.ctaNode.glowIntensity * connectionBoost;
+                        
+                        // Gradient plus visible aux coins
+                        const gradient = ctx.createLinearGradient(node.x, node.y, targetX, targetY);
+                        gradient.addColorStop(0, `rgba(0, 212, 255, ${baseOpacity * 0.45})`);
+                        gradient.addColorStop(0.2, `rgba(123, 47, 247, ${baseOpacity * 0.4})`);
+                        gradient.addColorStop(0.5, `rgba(0, 212, 255, ${baseOpacity * 0.75})`);
+                        gradient.addColorStop(0.75, `rgba(0, 212, 255, ${baseOpacity * 0.6})`);
+                        gradient.addColorStop(0.92, `rgba(0, 212, 255, ${baseOpacity * 0.45})`);
+                        gradient.addColorStop(1, `rgba(0, 212, 255, ${baseOpacity * 0.2})`);
+                        
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 0.9 + distFactor * 1.1;
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y);
+                        
+                        // Courbe avec mouvement 3D
+                        const ctrlX = (node.x + targetX) / 2 + 
+                            Math.sin(time * 0.4 + cornerIdx * 0.8 + idx * 0.25) * 12 +
+                            mouseOffset3D.x * 0.5;
+                        const ctrlY = (node.y + targetY) / 2 + 
+                            Math.cos(time * 0.3 + idx * 0.15) * 8 +
+                            mouseOffset3D.y * 0.3;
+                        ctx.quadraticCurveTo(ctrlX, ctrlY, targetX, targetY);
+                        ctx.stroke();
+                    });
+                });
+                
+                // Glow autour du bouton (amplifié pendant l'animation)
+                const glowPulse = 0.5 + Math.sin(time * CONFIG.ctaNode.pulseSpeed) * 0.4;
+                const animGlow = animFactor > 0 ? (1 + animFactor * 0.5) : 1;
+                const glowOpacity = 0.2 * glowPulse * CONFIG.ctaNode.glowIntensity * animGlow;
+                
+                const ctaGlow = ctx.createRadialGradient(ctaCenter.x, ctaCenter.y, 0, ctaCenter.x, ctaCenter.y, 160);
+                ctaGlow.addColorStop(0, `rgba(0, 212, 255, ${glowOpacity})`);
+                ctaGlow.addColorStop(0.3, `rgba(123, 47, 247, ${glowOpacity * 0.35})`);
+                ctaGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = ctaGlow;
+                ctx.beginPath();
+                ctx.arc(ctaCenter.x, ctaCenter.y, 160, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Noeuds
+        sortedIndices.forEach(i => {
+            const node = screenNodes[i];
+            if (!node.visible) return;
+            if (node.y < -50 || node.y > h + 50) return;
+
+            const distFromCenter = Math.abs(node.y - h / 2) / (h / 2);
+            const t = node.networkPosition || 0;
+            
+            let opacity = 0.6 * (0.5 + t * 0.45);
+            opacity *= (1 - distFromCenter * 0.15);
+            
+            const depthFactor = 0.5 + (1 - (node.depth + 150) / 300) * 0.5;
+            opacity *= Math.max(0.3, Math.min(1, depthFactor));
+            
+            opacity *= node.networkFade;
+            
+            if (node.y < 40) opacity *= node.y / 40;
+            if (node.y > h - 40) opacity *= (h - node.y) / 40;
+            
+            opacity = Math.max(0, Math.min(1, opacity));
+            if (opacity < 0.02) return;
+
+            let pulseScale = 1;
+            if (pulseEnabled && node.type === 'main') {
+                pulseScale = 1 + Math.sin(time * pulseSpeed + i * 0.4) * pulseIntensity;
+            }
+
+            const sizeMultiplier = node.scale * pulseScale;
+            const displaySize = node.size * sizeMultiplier;
+
+            const glowSize = displaySize * (node.type === 'main' ? 4 : node.type === 'path' ? 2.5 : 1.8);
+            const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowSize);
+            gradient.addColorStop(0, `rgba(0, 212, 255, ${opacity * 0.75})`);
+            gradient.addColorStop(0.3, `rgba(123, 47, 247, ${opacity * 0.22})`);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, glowSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.85})`;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, displaySize, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function animate() {
+        if (!state.isRunning) return;
+        state.time += 0.016;
+        state.scrollProgress = state.maxScroll > 0 ? state.scrollY / state.maxScroll : 0;
+        state.smoothMouseX += (state.mouseX - state.smoothMouseX) * CONFIG.mouse.smoothing;
+        state.smoothMouseY += (state.mouseY - state.smoothMouseY) * CONFIG.mouse.smoothing;
+        
+        updateCtaCorners();
+        drawBgShapes();
+        drawStars();
+        drawNetwork();
+        
+        document.getElementById('nav').classList.toggle('scrolled', state.scrollY > 100);
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('scroll', () => { state.scrollY = window.scrollY; }, { passive: true });
+    window.addEventListener('resize', () => { resize(); initNetwork(); initBgShapes(); });
+    document.addEventListener('mousemove', e => {
+        state.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        state.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+        state.isRunning = !document.hidden;
+        if (state.isRunning) animate();
+    });
+
+    function initNav() {
+        const nav = document.getElementById('nav');
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('navLinks');
+        setTimeout(() => nav.classList.add('visible'), 1500);
+        burger?.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const target = link.getAttribute('href');
+                document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
+                navLinks.classList.remove('active');
+                
+                // Animation de connexion CTA si on va vers #contact
+                if (target === '#contact') {
+                    // Déclencher l'animation après le scroll
+                    setTimeout(() => {
+                        state.ctaConnectionAnim = 0;
+                        state.ctaConnectionTarget = 1;
+                        // Reset après l'animation
+                        setTimeout(() => {
+                            state.ctaConnectionTarget = 0;
+                            state.ctaConnectionAnim = 0;
+                        }, 2500);
+                    }, 600);
+                }
+            });
+        });
+    }
+
+    function initReveal() {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    function init() {
+        resize();
+        initBgShapes();
+        initStars();
+        initNetwork();
+        initNav();
+        initReveal();
+        animate();
+        console.log('🚀 Nova v10 - Enhanced Visibility + 3D Mouse + CTA Connection Animation');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+    </script>
+</body>
+</html>
