@@ -17,6 +17,7 @@ test rapid paralax galaxy
   - https://cloudspawn.github.io/landingtest/nova-consulting-v7.html
   - https://cloudspawn.github.io/landingtest/nova-consulting-v8.html
   - https://cloudspawn.github.io/landingtest/nova-consulting-v9.html
+  - https://cloudspawn.github.io/landingtest/nova-consulting-v10.html
 
 ## TO DO
   - basé sur nova consulting v6 et ou galaxy vf, 
