@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formez les innovateurs de demain - AIXELLENCE">
+    <title>AIXELLENCE - Formation en Éloquence, Pensée Critique et IA</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nav" id="nav">
+        <a href="#hero" class="nav__logo">AIXELLENCE</a>
+        <ul class="nav__links" id="navLinks">
+            <li><a href="#home" class="nav__link">Accueil</a></li>
+            <li><a href="#s1" class="nav__link">Présentation</a></li>
+            <li><a href="#s2" class="nav__link">Services</a></li>
+            <li><a href="#s3" class="nav__link">Vision</a></li>
+            <li><a href="#s4" class="nav__link">Contact</a></li>
+            <li><a href="#s5" class="nav__link">Clients</a></li>
+        </ul>
+        <a href="#candidature" class="btn btn--primary nav__cta">Candidater</a>
+        <div class="nav__burger" id="burger"><span></span><span></span><span></span></div>
+    </nav>
+
+    <!-- BACKGROUND -->
+    <div class="parallax-bg">
+        <div class="nebula"></div>
+    </div>
+    
+    <!-- STARS LAYER -->
+    <canvas class="layer-canvas layer-stars" id="starsCanvas"></canvas>
+    
+    <!-- NETWORK LAYER -->
+    <canvas class="layer-canvas layer-network" id="networkCanvas"></canvas>
+
+    <!-- HERO -->
+    <section class="section section--hero" id="home">
+        <div class="hero">
+            <h1 class="hero__title">
+                <span>Formez les innovateurs de</span>
+                <span class="text-accent">Demain</span>
+            </h1>
+            <p class="hero__subtitle">Maîtriser l'éloquence pour convaincre, la pensée critique pour décider, l'IA pour innover.</p>
+            <a href="#candidature" class="btn btn--primary hero__cta">
+                CANDIDATER POUR FÉVRIER 2026
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        <div class="hero__scroll">
+            <span class="hero__scroll-text">Découvrez plus</span>
+            <div class="hero__scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- SERVICES - LAYOUT FLUIDE -->
+    <section class="section" id="s2">
+        <div class="services">
+            <header class="services__header reveal">
+                <p class="services__label">Nos Services</p>
+                <h2 class="services__title">Expertise et Innovation</h2>
+            </header>
+            
+            <div class="services__list">
+                <article class="service-item reveal reveal-delay-1">
+                    <span class="service-item__number">01</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Éloquence Stratégique</h3>
+                        <p class="service-item__text">Maîtrisez l'art de la persuasion et de la communication pour convaincre vos audiences avec impact et authenticité.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Communication</span>
+                        <span class="service-item__tag">Leadership</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-2">
+                    <span class="service-item__number">02</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Pensée Critique</h3>
+                        <p class="service-item__text">Développez une analyse profonde et nuancée pour prendre des décisions éclairées dans un monde complexe.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Analyse</span>
+                        <span class="service-item__tag">Stratégie</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-3">
+                    <span class="service-item__number">03</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Maîtrise de l'IA</h3>
+                        <p class="service-item__text">Explorez les frontières de l'intelligence artificielle pour innover et créer les solutions de demain.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Intelligence Artificielle</span>
+                        <span class="service-item__tag">Innovation</span>
+                    </div>
+                </article>
+                
+                <article class="service-item reveal reveal-delay-4">
+                    <span class="service-item__number">04</span>
+                    <div class="service-item__content">
+                        <h3 class="service-item__title">Transformation Digitale</h3>
+                        <p class="service-item__text">Accompagnez votre organisation dans sa transition vers le numérique avec expertise et vision.</p>
+                    </div>
+                    <div class="service-item__tags">
+                        <span class="service-item__tag">Technologie</span>
+                        <span class="service-item__tag">Transformation</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLIENTS - MARQUEE -->
+    <section class="section" id="s5">
+        <div class="proof">
+            <div class="marquee-container reveal">
+                <div class="marquee">
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Google</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Microsoft</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Amazon</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>OpenAI</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Anthropic</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Tesla</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Google</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Microsoft</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Amazon</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>OpenAI</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Anthropic</span>
+                    <span class="marquee__item"><span class="marquee__dot">●</span>Tesla</span>
+                </div>
+            </div>
+            
+            <blockquote class="proof__testimonial reveal">
+                <p class="proof__quote">Nova a transformé notre approche technique. En 6 mois, nous avons réduit nos coûts cloud de 40% tout en doublant notre capacité de déploiement.</p>
+                <footer class="proof__author">
+                    <div class="proof__avatar"></div>
+                    <div class="proof__author-info">
+                        <cite class="proof__author-name">Marie Laurent</cite>
+                        <span class="proof__author-role">CTO, Fintech+</span>
+                    </div>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" id="contact">
+        <div class="cta-section reveal">
+            <h2 class="cta-section__title">
+                Prêt à passer au<br>
+                <span class="text-accent">niveau supérieur</span> ?
+            </h2>
+            <p class="cta-section__text">Discutons de votre projet. Premier échange sans engagement.</p>
+            <a href="mailto:contact@aixellence.com" class="btn btn--outline btn--large">Contactez-nous</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p class="footer__text">© 2025 AIXELLENCE. Tous droits réservés.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
